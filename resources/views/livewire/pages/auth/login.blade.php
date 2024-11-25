@@ -1,9 +1,10 @@
 <?php
 
+use App\Models\User;
+use Livewire\Volt\Component;
+use Livewire\Attributes\Layout;
 use App\Livewire\Forms\LoginForm;
 use Illuminate\Support\Facades\Session;
-use Livewire\Attributes\Layout;
-use Livewire\Volt\Component;
 
 new #[Layout('layouts.app')] class extends Component
 {
@@ -20,7 +21,11 @@ new #[Layout('layouts.app')] class extends Component
 
         Session::regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        if (auth()->user()->isAdmin()) {
+            $this->redirectIntended(default: route('admin.dashboard', absolute: false), navigate: true);
+        } else {
+            $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        }
     }
 }; ?>
 

@@ -2,10 +2,10 @@
     <a class="group block overflow-hidden rounded-lg">
         <!-- Product Images (static + hover effect) -->
         <div class="relative h-[350px] sm:h-[450px]">
-            <img src="{{ $product->primaryImage()->image_path }}" alt="{{ $product->name }}"
+            <img src="{{ $product->primaryImage() }}" alt="{{ $product->name }}"
                 class="absolute inset-0 h-full w-full object-cover opacity-100 group-hover:opacity-0" />
 
-            <img src="{{ $product->hoverImage()->image_path }}" alt="{{ $product->name }}"
+            <img src="{{ $product->hoverImage() }}" alt="{{ $product->name }}"
                 class="absolute inset-0 h-full w-full object-cover opacity-0 group-hover:opacity-100" />
         </div>
 

@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ProductVariant extends Model
 {
+    const SIZE = [
+        'S',
+        'M',
+        'L',
+        'XL',
+    ];
+
     use HasFactory;
     protected $fillable = [
         'product_id',

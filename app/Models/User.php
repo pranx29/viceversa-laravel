@@ -9,6 +9,10 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+
+    const CUSTOMER = 'customer';
+    const ADMIN = 'admin';
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
@@ -47,5 +51,10 @@ class User extends Authenticatable
         ];
     }
 
-    
+    public function isAdmin(): bool
+    {
+        return $this->type === self::ADMIN;
+    }
+
+
 }

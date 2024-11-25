@@ -13,6 +13,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        User::create([
+            'first_name' => 'Pranavan',
+            'last_name' => 'Sivakumar',
+            'email' => 'pranx@vv.com',
+            'password' => bcrypt('password'),
+            'type' => 'admin',
+        ]);
+
         $this->call([
             CategorySeeder::class,
             ColorSeeder::class,

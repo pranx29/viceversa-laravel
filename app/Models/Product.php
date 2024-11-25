@@ -24,13 +24,26 @@ class Product extends Model
     public function primaryImage()
     {
         $variant = $this->variants()->first();
-        return $variant ? $variant->images()->orderBy('order')->first() : null;
+        $image = $variant ? $variant->images()->orderBy('order')->first() : null;
+        return $image ? \Storage::url($image->image_path) : null;
     }
 
     public function hoverImage()
     {
         $variant = $this->variants()->first();
-        return $variant ? $variant->images()->orderBy('order', 'desc')->first() : null;
+        $image =  $variant ? $variant->images()->orderBy('order', 'desc')->first() : null;
+        return $image ? \Storage::url($image->image_path) : null;
+    }
+
+    public function totalStock()
+    {
+        return $this->variants()->sum('stock');
+    }
+
+    // get number of variants
+    public function totalVariants()
+    {
+        return $this->variants()->count();
     }
 
 

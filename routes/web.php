@@ -3,14 +3,14 @@
 use App\Http\Controllers\Customer\CustomerController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/',[CustomerController::class, 'home'])->name('home');
-
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::get('/', [CustomerController::class, 'home'])->name('home');
 
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
-require __DIR__.'/auth.php';
+Route::prefix('admin')
+    ->namespace('App\Http\Controllers\Admin')
+    ->group(base_path('routes/admin.php'));
+
+require __DIR__ . '/auth.php';
