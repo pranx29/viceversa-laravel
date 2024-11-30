@@ -66,8 +66,8 @@
                                         :active="$product->is_active">{{ $product->is_active ? 'Active' : 'Inactive' }}</x-badge>
                                 </td>
                                 <td class="p-4 border-b border-foreground py-3">
-                                    <p class="text-sm text-foreground">{{ $product->totalStock() }} for
-                                        {{ $product->totalVariants() }} variant(s)
+                                    <p class="text-sm text-foreground">{{ $product->totalStock()}} for
+                                        {{ $product->sizes->count() }} variant(s)
                                     </p>
                                 </td>
                                 <td class="p-4 border-b border-foreground py-3">

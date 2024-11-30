@@ -19,7 +19,6 @@
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-background">
         <livewire:layout.navigation />
-        <!-- Page Content -->
         <main>
             {{ $slot }}
         </main>

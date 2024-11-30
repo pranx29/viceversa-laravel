@@ -10,7 +10,8 @@ class CustomerController extends Controller
 {
     public function home()
     {
-        $products = Product::with(['variants.color', 'variants.images'])->get();
+        
+        $products = Product::all();
         return view('customer.home.index', compact('products'));
     }
 }

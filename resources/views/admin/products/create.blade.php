@@ -9,13 +9,10 @@
                 </a>
                 <h2 class="text-2xl font-bold text-primary-foreground sm:text-3xl">Create Product</h2>
             </div>
-
             <!-- Form to create a new product -->
             <div class="w-2/3 h-full">
-                @livewire('product-form')
+                <livewire:admin.products.add-product-form />
             </div>
-        </div>
-
-        
+        </div>        
     </div>
 </x-admin-layout>

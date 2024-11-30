@@ -19,7 +19,6 @@ class CheckUserType
         if (!Auth::check() || Auth::user()->type !== $type) {
             return redirect('/');
         }
-
         return $next($request);
     }
 }

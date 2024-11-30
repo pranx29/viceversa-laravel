@@ -2,6 +2,8 @@
 
 namespace App\Models;
 use App\Models\Category;
+use Illuminate\Support\Str;
+use App\Models\ProductImage;
 use App\Models\ProductVariant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,42 +11,49 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Product extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'description', 'price', 'is_active', 'category_id'];
+    protected $fillable = ['name', 'description', 'price', 'discount', 'is_active', 'category_id', 'slug'];
+
+    protected static function booted()
+    {
+        static::creating(function ($product) {
+            if (empty($product->slug)) {
+                $product->slug = Str::slug($product->name);
+            }
+        });
+
+        static::updating(function ($product) {
+            if ($product->isDirty('name')) {
+                $product->slug = Str::slug($product->name);
+            }
+        });
+    }
 
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
-
-    public function variants()
+    public function sizes()
     {
-        return $this->hasMany(ProductVariant::class);
+        return $this->hasMany(ProductSize::class);
+    }
+    public function images()
+    {
+        return $this->hasMany(ProductImage::class);
     }
 
     public function primaryImage()
     {
-        $variant = $this->variants()->first();
-        $image = $variant ? $variant->images()->orderBy('order')->first() : null;
-        return $image ? \Storage::url($image->image_path) : null;
+        return $this->hasOne(ProductImage::class)->where('order', 1)->first()->path ?? null;
     }
 
-    public function hoverImage()
+    public function secondaryImage()
     {
-        $variant = $this->variants()->first();
-        $image =  $variant ? $variant->images()->orderBy('order', 'desc')->first() : null;
-        return $image ? \Storage::url($image->image_path) : null;
+        return $this->hasOne(ProductImage::class)->where('order', 2)->first()->path ?? null;
     }
 
     public function totalStock()
     {
-        return $this->variants()->sum('stock');
+        return $this->sizes->sum('quantity_in_stock');
     }
-
-    // get number of variants
-    public function totalVariants()
-    {
-        return $this->variants()->count();
-    }
-
 
 }
