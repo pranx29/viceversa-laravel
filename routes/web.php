@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\ProductController;
 use App\Http\Controllers\Customer\CustomerController;
 
@@ -12,6 +13,11 @@ Route::view('profile', 'profile')
 
 
 Route::get('product/{slug}', [ProductController::class, 'show'])->name('product.show');
+
+Route::post('cart', [CartController::class, 'store'])->name('cart.store');
+Route::get('cart', [CartController::class, 'show'])->name('cart.show');
+Route::get('cart/add', [CartController::class, 'add'])->name('cart.add');
+
 
 
 

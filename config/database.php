@@ -17,6 +17,7 @@ return [
     */
 
     'default' => env('DB_CONNECTION', 'sqlite'),
+    
 
     /*
     |--------------------------------------------------------------------------
@@ -30,6 +31,11 @@ return [
     */
 
     'connections' => [
+        'mongodb' => [
+            'driver' => 'mongodb',
+            'dsn' => env('MONGO_DB_URI'),
+            'database' => env('DB_MONGODB_DATABASE', 'viceversa_db'),
+        ],
 
         'sqlite' => [
             'driver' => 'sqlite',
@@ -147,7 +153,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
         ],
 
         'default' => [

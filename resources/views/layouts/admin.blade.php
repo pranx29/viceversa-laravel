@@ -89,9 +89,13 @@
                             <span> eric@frusciante.com </span>
                         </p>
                     </div>
-                    <a class="text-xs ml-auto" >
-                        <x-heroicon-s-arrow-right-start-on-rectangle class="w-5 h-5 text-button hover:text-button/80" />
-                    </a>
+                    <form method="POST" action="{{ route('logout') }}" class="text-xs ml-auto">
+                        @csrf
+                        <button type="submit" >
+                            <x-heroicon-s-arrow-right-start-on-rectangle
+                                class="w-5 h-5 text-button hover:text-button/80" />
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
