@@ -1,109 +1,116 @@
-<div>
-    <form wire:submit.prevent="submit" class="space-y-4 mt-8">
-        @if(session()->has('message'))
-            <x-alert type="success" title="Product Added" class="mt-4">
+<div class="max-w-7xl mx-auto sm:px-12 lg:px-16 min-h-screen">
+    <!-- Heading and Back arrow to products -->
+    <div class="flex items-center gap-4 justify-between">
+        <div class="flex items-center gap-4">
+            <a href="{{ route('admin.products.index') }}" class="text-sm text-button transition hover:text-button/75">
+                <x-heroicon-o-arrow-left class="size-6" />
+            </a>
+            <h2 class="text-2xl font-bold text-primary-foreground sm:text-3xl">Create Product</h2>
+        </div>
+        <div class="flex justify-end gap-4">
+            <button
+                class="rounded-lg bg-primary text-foreground px-4 py-2 text-sm font-medium hover:bg-opacity-80 transition-colors">
+                Discard
+            </button>
+            <button wire:click="prepareAndSave"
+                class="rounded-lg bg-button px-4 py-2 text-sm font-medium hover:bg-opacity-80 transition-colors">
+                Save
+            </button>
+        </div>
+    </div>
+    @if (session()->has('message'))
+        <div class="mt-4">
+            <div class="rounded-lg p-3 bg-button">
                 {{ session('message') }}
-            </x-alert>
-        @elseif(session()->has('error'))
-            <x-alert type="error" title="Error" class="mt-4">
+            </div>
+        </div>
+    @endif
+    @if (session()->has('error'))
+        <div class="mt-4">
+            <div class="rounded-lg p-3 bg-button">
                 {{ session('error') }}
-            </x-alert>
-        @endif
-        @csrf
-        <div class="grid grid-cols-1 space-y-8">
-            <!-- Product Details -->
-            <div class="space-y-4">
-                <div>
-                    <x-input-label for="name" :value="__('Name')" />
-                    <x-text-input wire:model.defer="name" id="name" type="text" class="block w-full mt-1" placeholder=""
-                        required autofocus />
-                    @error('name') <span class="text-red-500">{{ $message }}</span> @enderror
-                </div>
-
-                <div>
-                    <x-input-label for="description" :value="__('Description')" />
-                    <x-textarea wire:model.defer="description" id="description" rows="4" class="block w-full mt-1"
-                        required></x-textarea>
-                    @error('description') <span class="text-red-500">{{ $message }}</span> @enderror
-                </div>
-                <div>
-                    <x-input-label for="category" :value="__('Category')" />
-                    <x-select-input wire:model.defer="category_id" id="category" class="block w-full mt-1" required>
-                        <option value="">Select a category</option>
-                        @foreach($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                        @endforeach
-                    </x-select-input>
-                    @error('category_id') <span class="text-red-500">{{ $message }}</span> @enderror
-                </div>
-
-                <div class="flex space-x-4">
-                    <div class="w-1/2">
-                        <x-input-label for="price" :value="__('Price')" />
-                        <x-text-input wire:model.defer="price" id="price" type="number" min="0"
-                            class="block w-full mt-1" required />
-                        @error('price') <span class="text-red-500">{{ $message }}</span> @enderror
-                    </div>
-                    <div class="w-1/2">
-                        <x-input-label for="discount" :value="__('Discount')" />
-                        <x-text-input wire:model.defer="discount" id="discount" type="number" min="0"
-                            class="block w-full mt-1" />
-                        @error('discount') <span class="text-red-500">{{ $message }}</span> @enderror
-                    </div>
-                </div>
-                <div class="w-1/2">
-                    <x-input-label for="status" :value="__('Status')" />
-                    <x-select-input wire:model.defer="status" id="status" class="block mt-1 w-full" required>
-                        <option value="1">Active</option>
-                        <option value="0">Inactive</option>
-                    </x-select-input>
-                    @error('status') <span class="text-red-500">{{ $message }}</span> @enderror
-                </div>
             </div>
+        </div>
+    @endif
 
-            <!-- Size variants -->
-            <div>
-                <x-input-label for="sizes" :value="__('Sizes')" />
-                <div class="flex flex-col gap-4 mt-1">
-                    @foreach($sizes as $size)
-                        <div class="flex items-center gap-2">
-                            <input type="checkbox" wire:model.defer="size_ids" value="{{ $size->id }}"
-                                id="size{{ $size->id }}"
-                                class="rounded bg-background border-border text-primary shadow-sm focus:ring-primary cursor-pointer transition-all checked:border-border" />
-                            <x-input-label for="size{{ $size->id }}" :value="$size->name" class="w-8" />
-                            <x-text-input type="number" wire:model.defer="size_quantities.{{ $size->id }}"
-                                id="quantity{{ $size->id }}" min="0" class="block w-20 mt-1" />
+    <!-- Form to create a new product -->
+    <div class="max-w-7xl mx-auto py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Main Content -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Product Details -->
+                <div class="rounded-lg p-6 bg-primary">
+                    <h2 class="text-2xl font-bold mb-2 text-primary-foreground">Product Details</h2>
+                    <p class="text-foreground mb-6">Enter the basic information about your product</p>
+
+                    <div class="space-y-4">
+                        <div>
+                            <x-input-label for="name" :value="__('Name')" />
+                            <x-text-input wire:model.defer="name" id="name" type="text" class="w-full"
+                                placeholder="Gamer Gear Pro Controller" />
+                            @error('name') <span class="text-red-500">{{ $message }}</span> @enderror
                         </div>
-                    @endforeach
-                </div>
-
-                @error('size_ids') <span class="text-red-500 mt-1">{{ $message }}</span> @enderror
-                @error('size_quantities') <span class="text-red-500 mt-1">{{ $message }}</span> @enderror
-            </div>
-
-
-
-            <!-- Product Images -->
-            <div>
-                <x-input-label for="images" :value="__('Product Images')" />
-                <div class="flex gap-4">
-                    @for ($i = 1; $i <= 4; $i++)
-                        <div class="flex flex-col items-center justify-center">
-                            <x-image-input key="{{ $i }}" id="image{{ $i }}" class="block my-1" />
-                            <x-input-label for="image{{ $i }}" :value="$i" />
+                        <div>
+                            <x-input-label for="description" :value="__('Description')" />
+                            <x-textarea wire:model.defer="description" id="description" rows="4" class="block w-full"
+                                required></x-textarea>
+                            @error('description') <span class="text-red-500">{{ $message }}</span> @enderror
                         </div>
-                    @endfor
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <x-input-label for="price" :value="__('Price')" />
+                                <x-text-input wire:model.defer="price" id="price" type="number" min="0"
+                                    class="block w-full" required />
+                                @error('price') <span class="text-red-500">{{ $message }}</span> @enderror
+                            </div>
+                            <div>
+                                <x-input-label for="discount" :value="__('Discount')" />
+                                <x-text-input wire:model.defer="discount" id="discount" type="number" min="0"
+                                    class="block w-full" />
+                                @error('discount') <span class="text-red-500">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+
+                        <div>
+                            <x-input-label for="category" :value="__('Category')" />
+                            <x-select-input wire:model.defer="category_id" id="category" class="block w-1/2" required>
+                                <option value="">Select a category</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach
+                            </x-select-input>
+                            @error('category_id') <span class="text-red-500">{{ $message }}</span> @enderror
+                        </div>
+
+                    </div>
                 </div>
-                @error('images')
-                    <span class="text-red-500 mt-1">{{ $message }}</span>
-                @enderror
+
+                <!-- Product Images -->
+                @livewire('admin.products.add-product-images')
+
+
             </div>
 
-            <!-- Submit Button -->
-            <div class="flex justify-end">
-                <x-primary-button type="submit" class="rounded-lg">
-                    Save
-                </x-primary-button>
+            <!-- Sidebar -->
+            <div class="space-y-8">
+                <!-- Product Status -->
+                <div class="bg-primary rounded-lg p-6 shadow-lg">
+                    <h2 class="text-2xl font-bold mb-4 text-primary-foreground">Product Status</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <x-input-label for="status" :value="__('Status')" />
+                            <x-select-input wire:model.defer="status" id="status" class="block w-full">
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
+                            </x-select-input>
+                        </div>
+                    </div>
+                </div>
+
+                @livewire('admin.products.add-size-variant')
             </div>
-    </form>
+        </div>
+    </div>
+
 </div>

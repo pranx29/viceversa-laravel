@@ -23,7 +23,7 @@
     @livewireScripts
 
     <div class="flex sm:flex-row flex-col">
-        <div class="flex sm:h-screen flex-col justify-between border-foreground bg-primary min-w-72 sticky top-0">
+        <!-- <div class="flex sm:h-screen flex-col justify-between border-foreground bg-primary min-w-72 sticky top-0">
             <div class="px-4 py-6">
                 <x-application-logo class="w-20 h-20 mx-auto" />
 
@@ -98,8 +98,10 @@
                     </form>
                 </div>
             </div>
-        </div>
-        <main class="flex-1 bg-background">
+        </div> -->
+        
+        @livewire('admin.components.sidebar')
+        <main class="lg:ml-72 p-8">
             {{ $slot }}
         </main>
     </div>

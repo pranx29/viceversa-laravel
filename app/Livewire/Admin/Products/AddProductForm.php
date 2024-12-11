@@ -4,54 +4,47 @@ namespace App\Livewire\Admin\Products;
 
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
+
 
 class AddProductForm extends Component
 {
     use WithFileUploads;
+
     public $name;
     public $description;
     public $category_id;
     public $price;
     public $discount;
     public $status = 1;
+
     public $images = [];
-    public $size_ids = [];
-    public $size_quantities = [];
+    public $variants = [];
 
-    protected $rules = [
-        'name' => 'required|string|max:255',
-        'description' => 'required|string',
-        'category_id' => 'required|integer',
-        'price' => 'required|numeric|min:0',
-        'discount' => 'nullable|numeric|min:0',
-        'status' => 'required|boolean',
-        'size_ids' => 'required|array|min:1',
-        'size_ids.*' => 'required|integer|exists:sizes,id',
-        'size_quantities' => 'required|array|min:1',
-        'size_quantities.*' => 'required|integer|min:0',
-        'images' => 'required|array|min:4|max:4',
-        'images.*' => 'required|image|max:1024',
-    ];
+    protected $listeners = ['sizeVariants' => 'updateVariants', 'productImages' => 'updateImages', 'save'];
 
-    public function getSelectedSizesWithQuantities()
+    public function updateVariants($variants)
     {
-        $sizesWithQuantities = [];
-
-        foreach ($this->size_ids as $sizeId) {
-            if (isset($this->size_quantities[$sizeId]) && $this->size_quantities[$sizeId] > 0) {
-                $sizesWithQuantities[] = [
-                    'size_id' => $sizeId,
-                    'quantity' => $this->size_quantities[$sizeId],
-                ];
-            }
-        }
-
-        return $sizesWithQuantities;
+        $this->variants = $variants;
     }
 
-    public function submit()
+    public function updateImages($images)
     {
-        $this->validate();
+        $this->images = $images;
+    }
+
+    public function save()
+    {
+        $this->validate(
+            [
+                'name' => 'required|string|max:25|min:3',
+                'description' => 'required|string',
+                'category_id' => 'required|exists:categories,id',
+                'price' => 'required|numeric|min:0',
+                'discount' => 'nullable|numeric|min:0',
+                'status' => 'required|in:1,0',
+            ],
+        );
 
         \DB::beginTransaction();
 
@@ -65,29 +58,32 @@ class AddProductForm extends Component
                 'status' => $this->status,
             ]);
 
-            $order = 1;
             foreach ($this->images as $image) {
                 $product->images()->create([
-                    'path' => $image->store("product_images/{$product->slug}/", 'public'),
-                    'order' => $order++,
+                    'path' => $image['path'],
+                    'order' => $image['order'],
                 ]);
             }
 
-            foreach($this->getSelectedSizesWithQuantities() as $sizeWithQuantity) {
+            foreach ($this->variants as $variant) {
                 $product->sizes()->create([
-                    'size_id' => $sizeWithQuantity['size_id'],
-                    'quantity_in_stock' => $sizeWithQuantity['quantity'],
+                    'size_id' => $variant['size_id'],
+                    'quantity_in_stock' => $variant['stock'],
                 ]);
             }
-
             \DB::commit();
         } catch (\Exception $e) {
             \DB::rollBack();
             session()->flash('error', $e->getMessage());
             return;
         }
+        session()->flash('message', 'Product saved successfully!');
+    }
 
-        session()->flash('message', 'Product created successfully!');
+    public function prepareAndSave()
+    {
+        $this->dispatch('emitVariants')->to('admin.products.add-size-variant');
+        $this->dispatch('emitImages')->to('admin.products.add-product-images');
     }
 
     public function render()
