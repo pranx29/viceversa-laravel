@@ -13,8 +13,10 @@
         </div>
         <div class="text-right">
             <p class="text-2xl font-bold mb-1 text-primary-foreground">${{ number_format($total, 2) }}</p>
-            <button wire:click="remove"
-                class="text-red-500 text-sm mt-4 hover:text-red-600 transition duration-300 ease-in-out">Remove</button>
+            <button wire:click="remove">
+                <x-heroicon-o-trash
+                    class="text-foreground text-sm hover:text-foreground/80 transition duration-300 ease-in-out size-4" />
+            </button>
         </div>
     </div>
 </div>

@@ -35,12 +35,12 @@
 
                 <h2 class="mt-4 text-base text-primary-foreground">Size</h2>
                 <div class="mt-1 flex select-none flex-wrap items-center space-x-2">
-                    @foreach ($product->sizes as $productSize)
+                    @foreach ($product->sizes as $size)
                         <label>
-                            <input type="radio" wire:click="selectSize('{{ $productSize->size->id }}')" class="peer sr-only"
-                                name="size" value="{{ $productSize->size->id }}" {{ $selectedSize == $productSize->size->id ? 'checked' : '' }} />
+                            <input type="radio" wire:click="selectSize('{{ $size->id }}')" class="peer sr-only"
+                                name="size" value="{{ $size->id }}" {{ $selectedSize == $size->id ? 'checked' : '' }} />
                             <p class="peer-checked:bg-white peer-checked:text-black text-primary-foreground rounded-lg border border-button px-6 py-2 font-bold">
-                                {{ $productSize->size->name }}
+                                {{ $size->name }}
                             </p>
                         </label>
                     @endforeach

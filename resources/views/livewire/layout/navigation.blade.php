@@ -36,46 +36,46 @@ new class extends Component {
 
             <div class="flex items-center">
                 <div class="flex items-center justify-center">
-                    <a href="{{ route('cart.show') }}"
-                        class="hover:bg-white text-foreground hover:text-black transition-colors duration-300 rounded-full bg-primary p-2">
-                        <x-heroicon-o-shopping-cart class="w-6 h-6" />
-                    </a>
 
-                    <div class="sm:flex">
-                        @if (Auth::guest())
-                            <x-nav-link class="bg-primary ml-4" href="{{ route('login') }}">{{ __('Login') }}</x-nav-link>
-                        @else
-                            <!-- Settings Dropdown -->
-                            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                                <x-dropdown align="right" width="48">
-                                    <x-slot name="trigger">
-                                        <button
-                                            class="hover:bg-white text-foreground hover:text-black transition-colors duration-300 rounded-full bg-primary p-2">
-                                            <div x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name"
-                                                x-on:profile-updated.window="name = $event.detail.name"></div>
+                        <livewire:customer.cart.cart-button />
+                        
+                        <div class="sm:flex">
+                            @if (Auth::guest())
+                                <x-nav-link class="bg-primary ml-4"
+                                    href="{{ route('login') }}">{{ __('Login') }}</x-nav-link>
+                            @else
+                                <!-- Settings Dropdown -->
+                                <div class="hidden sm:flex sm:items-center sm:ms-6">
+                                    <x-dropdown align="right" width="48">
+                                        <x-slot name="trigger">
+                                            <button
+                                                class="hover:bg-white text-foreground hover:text-black transition-colors duration-300 rounded-full bg-primary p-2">
+                                                <div x-data="{{ json_encode(['name' => auth()->user()->name]) }}"
+                                                    x-text="name" x-on:profile-updated.window="name = $event.detail.name">
+                                                </div>
 
-                                            <div>
-                                                <x-heroicon-o-user-circle class="w-6 h-6" />
-                                            </div>
-                                        </button>
-                                    </x-slot>
+                                                <div>
+                                                    <x-heroicon-o-user-circle class="w-6 h-6" />
+                                                </div>
+                                            </button>
+                                        </x-slot>
 
-                                    <x-slot name="content">
-                                        <x-dropdown-link :href="route('profile')" wire:navigate>
-                                            {{ __('Profile') }}
-                                        </x-dropdown-link>
-
-                                        <!-- Authentication -->
-                                        <button wire:click="logout" class="w-full text-start">
-                                            <x-dropdown-link>
-                                                {{ __('Log Out') }}
+                                        <x-slot name="content">
+                                            <x-dropdown-link :href="route('profile')" wire:navigate>
+                                                {{ __('Profile') }}
                                             </x-dropdown-link>
-                                        </button>
-                                    </x-slot>
-                                </x-dropdown>
-                            </div>
-                        @endif
-                    </div>
+
+                                            <!-- Authentication -->
+                                            <button wire:click="logout" class="w-full text-start">
+                                                <x-dropdown-link>
+                                                    {{ __('Log Out') }}
+                                                </x-dropdown-link>
+                                            </button>
+                                        </x-slot>
+                                    </x-dropdown>
+                                </div>
+                            @endif
+                        </div>
                 </div>
 
                 <!-- Hamburger button for mobile -->

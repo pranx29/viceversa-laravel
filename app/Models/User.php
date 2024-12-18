@@ -57,5 +57,15 @@ class User extends Authenticatable
         return $this->type === self::ADMIN;
     }
 
+    public function cart()
+    {
+        return $this->hasOne(Cart::class);
+    }
+
+    public function getCartCountAttribute()
+    {
+        return $this->cart->count();
+    }
+
 
 }

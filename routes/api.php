@@ -1,20 +1,19 @@
 <?php
 
-use App\Http\Controllers\API\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\CartController;
+use App\Http\Controllers\API\ProductController;
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
 
-Route::post('/login', [
-    AuthController::class,
-    'login'
-])->name('api.login');
+// * Auth routes
+Route::post('/register', [AuthController::class, 'register'])->name('register');
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth:sanctum');
 
-Route::post('/register', [
-    AuthController::class,
-    'register'
-])->name('api.register');
+// * Product routes
+Route::get('/products', [ProductController::class, 'index'])->name('products.index')->middleware('auth:sanctum');
 
+// * Cart routes
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index')->middleware('auth:sanctum');

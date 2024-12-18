@@ -22,6 +22,8 @@ class CartItem extends Component
         $this->product['quantity']++;
         $this->dispatch('updateQuantity', $this->index, $this->product['quantity']);
         $this->calculateTotal();
+
+        $this->dispatch('productAddedToCart');
     }
     public function decrement()
     {
@@ -30,6 +32,7 @@ class CartItem extends Component
             $this->dispatch('updateQuantity', $this->index, $this->product['quantity']);
             $this->calculateTotal();
         }
+        $this->dispatch('productRemoveFromCart');
     }
 
     public function calculateTotal()
@@ -40,6 +43,7 @@ class CartItem extends Component
     public function remove()
     {
         $this->dispatch('removeProduct', $this->index);
+        $this->dispatch('productRemoveFromCart', $this->product['quantity']);
     }
 
     public function render()

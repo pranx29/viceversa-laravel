@@ -2,13 +2,15 @@
 
 namespace App\Livewire\Customer\Cart;
 
+use App\Models\Cart;
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 
 class CartPage extends Component
 {
     public $products = [];
     public $subtotal = 0;
-    public $shipping = 17.00; 
+    public $shipping = 17.00;
     public $total = 0;
     protected $listeners = ['updateQuantity', 'removeProduct'];
 
@@ -22,15 +24,21 @@ class CartPage extends Component
     {
         $this->products[$index]['quantity'] = max(1, $quantity);
         $this->calculateTotals();
+
+        Cart::updateProductQuantity($this->products[$index]['product_id'], $this->products[$index]['size']['id'], $quantity);
     }
 
     public function removeProduct($index)
     {
+        $productToRemove = $this->products[$index];
         unset($this->products[$index]);
-        $this->products = array_values($this->products); 
+        $this->products = array_values($this->products);
 
         $this->calculateTotals();
+
+        Cart::removeProduct($productToRemove['product_id'], $productToRemove['size']['id']);
     }
+
 
     public function calculateTotals()
     {
