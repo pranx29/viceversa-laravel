@@ -17,7 +17,7 @@ class AuthController extends Controller
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['nullable', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'password' => ['required', 'string', Rules\Password::defaults()],
+            'password' => ['required', 'string', 'min:6'],
         ]);
 
         if ($validator->fails()) {

@@ -66,10 +66,7 @@ class AddProductForm extends Component
             }
 
             foreach ($this->variants as $variant) {
-                $product->sizes()->create([
-                    'size_id' => $variant['size_id'],
-                    'quantity_in_stock' => $variant['stock'],
-                ]);
+                $product->sizes()->attach($variant['size_id'], ['quantity_in_stock' => $variant['stock']]);
             }
             \DB::commit();
         } catch (\Exception $e) {
