@@ -1,5 +1,5 @@
 @extends('layouts.customer')
 
 @section('content')
-@livewire('customer.cart.cart-page', ['products' => $cartItems])
+@livewire('customer.cart.cart-page')
 @endsection

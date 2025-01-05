@@ -5,8 +5,7 @@
     <div class="space-y-4">
         {{-- Image Selection --}}
         @if (count($images) < $maxImages)
-            <div class="border-2 border-dashed border-secondary rounded-lg p-8 text-center"
-                x-data
+            <div class="border-2 border-dashed border-secondary rounded-lg p-8 text-center" x-data
                 x-on:click="$refs.fileInput.click()">
                 <div class="mx-auto w-12 h-12 mb-4">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -38,7 +37,7 @@
                             wire:change="updateImageOrder({{ $index }}, $event.target.value)">
                     </div>
                     <button wire:click="removeImage({{ $index }})"
-                        class="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center">
+                        class="absolute top-2 right-2 bg-red-500 text-white rounded-md w-6 h-6 flex items-center justify-center">
                         &times;
                     </button>
                 </div>

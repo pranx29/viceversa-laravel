@@ -21,10 +21,9 @@
 
                 <a href="#best-sellers" class="group mt-8 sm:self-start self-center">
                     <span
-                        class="inline-flex items-center justify-center rounded-full bg-button px-5 py-3 font-medium transition-colors  hover:bg-opacity-80">
+                        class="inline-flex items-center justify-center rounded-md bg-button px-5 py-2 font-medium transition-colors hover:bg-opacity-80">
                         <span class="mr-2">Explore Collections</span>
-                        <x-heroicon-o-arrow-down-circle
-                            class="h-5 w-5 transition-transform group-hover:translate-y-1" />
+                        <x-iconsax-bro-arrow-down-2 class="h-5 w-5 transition-transform group-hover:translate-y-1" />
                         </svg>
                     </span>
                 </a>

@@ -10,10 +10,7 @@ class ProductController extends Controller
 {
     public function index()
     {
-        // Return all products as JSON Product::all()
-        $products = Product::all();
-        return response()->json([
-            'products' => $products
-        ]);
+        $products = Product::all()->load('category', 'images', 'sizes');
+        return response()->json($products);
     }
 }

@@ -23,7 +23,7 @@
                 <x-sidebar-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')"
                     class="hover:bg-button text-foreground hover:text-black">
                     <div class="flex items-center px-4">
-                        <x-heroicon-o-squares-2x2 class="w-5 h-5 mr-3" />
+                        <x-iconsax-bol-category-2 class="w-5 h-5 mr-3" />
                         Dashboard
                     </div>
                 </x-sidebar-link>
@@ -32,7 +32,7 @@
                     <button wire:click="toggleMenu('products')"
                         class="flex items-center justify-between w-full px-4 py-2 hover:bg-button rounded-lg hover:text-black {{ in_array('products', $expandedMenus) ? 'bg-button text-black' : 'text-foreground' }}">
                         <div class="flex items-center">
-                            <x-heroicon-o-shopping-bag class="w-5 h-5 mr-3" />
+                            <x-iconsax-bol-bag-2 class="w-5 h-5 mr-3" />
                             Products
                         </div>
                         <svg class="w-4 h-4 transition-transform {{ in_array('products', $expandedMenus) ? 'rotate-180' : '' }}"
@@ -58,14 +58,14 @@
                 </div>
                 <x-sidebar-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')">
                     <div class="flex items-center px-4 text-foreground">
-                        <x-heroicon-o-users class="w-5 h-5 mr-3" />
+                        <x-iconsax-bol-user class="w-5 h-5 mr-3" />
                         Customers
                     </div>
                 </x-sidebar-link>
 
                 <x-sidebar-link href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')">
                     <div class="flex items-center px-4 text-foreground">
-                        <x-heroicon-o-shopping-cart class="w-5 h-5 mr-3" />
+                        <x-iconsax-bul-group-1 class="w-5 h-5 mr-3" />
                         Orders
                     </div>
                 </x-sidebar-link>
@@ -78,8 +78,8 @@
                         <p class="text-sm font-medium truncate text-white">Eric Frusciante</p>
                         <p class="text-sm text-foreground truncate">eric@frusciante.com</p>
                     </div>
-                    <button class="p-2 rounded-md text-foreground hover:text-white">
-                        <x-heroicon-s-arrow-right-start-on-rectangle class="w-5 h-5" />
+                    <button wire:click="logout" class="p-2 rounded-md text-foreground hover:text-white">
+                        <x-iconsax-bol-logout class="w-5 h-5" />
                     </button>
                 </div>
             </div>

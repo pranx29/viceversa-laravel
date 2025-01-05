@@ -3,7 +3,7 @@
     <div class="flex items-center gap-4 justify-between">
         <div class="flex items-center gap-4">
             <a href="{{ route('admin.products.index') }}" class="text-sm text-button transition hover:text-button/75">
-                <x-heroicon-o-arrow-left class="size-6" />
+                <x-iconsax-bro-arrow-left-1 class="size-6" />
             </a>
             <h2 class="text-2xl font-bold text-primary-foreground sm:text-3xl">Create Product</h2>
         </div>
@@ -19,11 +19,9 @@
         </div>
     </div>
     @if (session()->has('message'))
-        <div class="mt-4">
-            <div class="rounded-lg p-3 bg-button">
-                {{ session('message') }}
-            </div>
-        </div>
+        <x-alert>
+            {{ session('message') }}
+        </x-alert>
     @endif
     @if (session()->has('error'))
         <div class="mt-4">
@@ -46,8 +44,7 @@
                     <div class="space-y-4">
                         <div>
                             <x-input-label for="name" :value="__('Name')" />
-                            <x-text-input wire:model.defer="name" id="name" type="text" class="w-full"
-                                placeholder="Gamer Gear Pro Controller" />
+                            <x-text-input wire:model.defer="name" id="name" type="text" class="w-full" placeholder="" />
                             @error('name') <span class="text-red-500">{{ $message }}</span> @enderror
                         </div>
                         <div>

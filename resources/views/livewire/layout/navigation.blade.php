@@ -25,68 +25,39 @@ new class extends Component {
                 </a>
             </div>
 
-            <div class="hidden md:block bg-primary rounded-full py-2 px-4">
+            <div class="hidden md:block bg-primary rounded-md py-2 px-4">
                 <nav aria-label="Global">
                     <x-nav-link href="{{ route('home') }}">{{ __('Home') }}</x-nav-link>
-                    <x-nav-link>{{ __('Shop') }}</x-nav-link>
+                    <x-nav-link href="{{ route('products.index')}}">{{ __('Shop') }}</x-nav-link>
                     <x-nav-link>{{ __('Collections') }}</x-nav-link>
                     <x-nav-link>{{ __('Contact') }}</x-nav-link>
                 </nav>
             </div>
 
             <div class="flex items-center">
-                <div class="flex items-center justify-center">
+                <div class="flex items-center justify-center gap-4">
 
-                        <livewire:customer.cart.cart-button />
-                        
-                        <div class="sm:flex">
-                            @if (Auth::guest())
-                                <x-nav-link class="bg-primary ml-4"
-                                    href="{{ route('login') }}">{{ __('Login') }}</x-nav-link>
-                            @else
-                                <!-- Settings Dropdown -->
-                                <div class="hidden sm:flex sm:items-center sm:ms-6">
-                                    <x-dropdown align="right" width="48">
-                                        <x-slot name="trigger">
-                                            <button
-                                                class="hover:bg-white text-foreground hover:text-black transition-colors duration-300 rounded-full bg-primary p-2">
-                                                <div x-data="{{ json_encode(['name' => auth()->user()->name]) }}"
-                                                    x-text="name" x-on:profile-updated.window="name = $event.detail.name">
-                                                </div>
+                    <livewire:customer.cart.cart-button />
 
-                                                <div>
-                                                    <x-heroicon-o-user-circle class="w-6 h-6" />
-                                                </div>
-                                            </button>
-                                        </x-slot>
-
-                                        <x-slot name="content">
-                                            <x-dropdown-link :href="route('profile')" wire:navigate>
-                                                {{ __('Profile') }}
-                                            </x-dropdown-link>
-
-                                            <!-- Authentication -->
-                                            <button wire:click="logout" class="w-full text-start">
-                                                <x-dropdown-link>
-                                                    {{ __('Log Out') }}
-                                                </x-dropdown-link>
-                                            </button>
-                                        </x-slot>
-                                    </x-dropdown>
-                                </div>
-                            @endif
-                        </div>
+                    @if (Auth::guest())
+                        <x-nav-link class="bg-primary" href="{{ route('login') }}">{{ __('Login') }}</x-nav-link>
+                    @else
+                        <a href="{{ route('profile') }}"
+                            class="hover:bg-white text-foreground hover:text-black transition-colors duration-300 rounded-md bg-primary p-2">
+                            <x-iconsax-bro-user-octagon class="w-6 h-6" />
+                        </a>
+                    @endif
                 </div>
 
                 <!-- Hamburger button for mobile -->
-                <div class="block md:hidden ml-2" x-data="{ open: false }">
+                <div class="block md:hidden ml-4" x-data="{ open: false }">
                     <button @click="open = !open"
-                        class="rounded p-2 text-foreground transition hover:text-foreground/80">
+                        class="hover:bg-white text-foreground hover:text-black transition-colors duration-300 rounded-md bg-primary p-2">
                         <template x-if="open">
-                            <x-heroicon-o-x-mark class="size-6" />
+                            <x-iconsax-bro-close-square class="size-6" />
                         </template>
                         <template x-if="!open">
-                            <x-heroicon-o-bars-3 class="size-6" />
+                            <x-iconsax-bro-menu-1 class="size-6" />
                         </template>
                     </button>
 

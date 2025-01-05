@@ -13,7 +13,9 @@
 
         <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             @foreach ($products as $product)
-                <livewire:customer.products.product-card :product="$product" />
+                <li>
+                    <livewire:customer.products.product-card :product="$product" />
+                </li>
             @endforeach
         </ul>
     </div>

@@ -27,4 +27,11 @@ class ProductController extends Controller
     {
         dd($request->all());
     }
+
+    public function show(Product $product)
+    {
+        return view('admin.products.show', [
+            'product' => $product,
+        ]);
+    }
 }

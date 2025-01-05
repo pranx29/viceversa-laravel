@@ -8,42 +8,47 @@ use Illuminate\Support\Facades\Auth;
 
 class CartPage extends Component
 {
-    public $products = [];
+    public $cartItems = [];
     public $subtotal = 0;
-    public $shipping = 17.00;
+    public $shipping = 250.00;
     public $total = 0;
-    protected $listeners = ['updateQuantity', 'removeProduct'];
+    protected $listeners = ['updateQuantity', 'removeItem'];
 
-    public function mount($products)
+    public function mount()
     {
-        $this->products = $products;
+        $this->cartItems = Cart::getCartItems();
         $this->calculateTotals();
     }
 
     public function updateQuantity($index, $quantity)
     {
-        $this->products[$index]['quantity'] = max(1, $quantity);
+        $this->cartItems[$index]['quantity'] = max(1, $quantity);
         $this->calculateTotals();
 
-        Cart::updateProductQuantity($this->products[$index]['product_id'], $this->products[$index]['size']['id'], $quantity);
+        Cart::updateProductQuantity($this->cartItems[$index]['product_id'], $this->cartItems[$index]['size_id'], $quantity);
     }
 
-    public function removeProduct($index)
+    public function removeItem($index)
     {
-        $productToRemove = $this->products[$index];
-        unset($this->products[$index]);
-        $this->products = array_values($this->products);
+        $productToRemove = $this->cartItems[$index];
+        unset($this->cartItems[$index]);
+        $this->cartItems = array_values($this->cartItems);
 
         $this->calculateTotals();
 
-        Cart::removeProduct($productToRemove['product_id'], $productToRemove['size']['id']);
+        Cart::removeProduct($productToRemove['product_id'], $productToRemove['size_id']);
     }
 
 
     public function calculateTotals()
     {
-        $this->subtotal = collect($this->products)->sum(fn($product) => $product['price'] * $product['quantity']);
+        $this->subtotal = collect($this->cartItems)->sum(fn($product) => $product['price'] * $product['quantity']);
         $this->total = $this->subtotal + $this->shipping;
+    }
+
+    public function checkout()
+    {
+        return redirect()->route('cart.checkout');
     }
 
     public function render()

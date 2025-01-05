@@ -8,6 +8,14 @@ use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
+
+    public function index()
+    {
+        $products = Product::all();
+        return view('customer.product.index', compact('products'));
+    }
+
+
     public function show($slug)
     {
         $product = Product::where('slug', $slug)->firstOrFail();

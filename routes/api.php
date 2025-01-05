@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CartController;
 use App\Http\Controllers\API\ProductController;
+use App\Http\Controllers\API\CategoryController;
 
 
 // * Auth routes
@@ -13,7 +14,11 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth:sanctum');
 
 // * Product routes
-Route::get('/products', [ProductController::class, 'index'])->name('products.index')->middleware('auth:sanctum');
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+
+
+// * Category routes
+Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
 
 // * Cart routes
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index')->middleware('auth:sanctum');

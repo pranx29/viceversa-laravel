@@ -6,8 +6,8 @@ use Livewire\Component;
 
 class Sidebar extends Component
 {
-    public $isSidebarOpen = false; 
-    public $expandedMenus = [];   
+    public $isSidebarOpen = false;
+    public $expandedMenus = [];
 
 
     // Toggle sidebar for mobile view
@@ -24,6 +24,12 @@ class Sidebar extends Component
         } else {
             $this->expandedMenus[] = $menuId;
         }
+    }
+
+    public function logout()
+    {
+        auth()->logout();
+        return redirect()->route('login');
     }
 
     public function render()

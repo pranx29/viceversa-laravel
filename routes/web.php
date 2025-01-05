@@ -7,18 +7,22 @@ use App\Http\Controllers\Customer\CustomerController;
 
 Route::get('/', [CustomerController::class, 'home'])->name('home');
 
-Route::view('profile', 'profile')
+Route::view('profile', 'customer.account')
     ->middleware(['auth'])
     ->name('profile');
 
 
+Route::get('products', [ProductController::class, 'index'])->name('products.index');
 Route::get('product/{slug}', [ProductController::class, 'show'])->name('product.show');
 
-Route::post('cart', [CartController::class, 'store'])->name('cart.store');
-Route::get('cart', [CartController::class, 'show'])->name('cart.show');
-Route::get('cart/add', [CartController::class, 'add'])->name('cart.add');
 
 
+// Cart routes
+Route::get('cart', function() {
+    return view('customer.cart.index');
+})->name('cart.show');
+
+Route::get('checkout', [CartController::class, 'checkout'])->name('cart.checkout');
 
 
 Route::prefix('admin')

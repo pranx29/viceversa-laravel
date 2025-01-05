@@ -16,8 +16,8 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-sans antialiased">
-    <div class="min-h-screen bg-background">
+<body class="font-sans antialiased bg-background">
+    <div class="min-h-screen">
         <livewire:layout.navigation />
         <main>
             {{ $slot }}

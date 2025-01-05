@@ -14,7 +14,9 @@
         "livewire/livewire": "^3.4",
         "livewire/volt": "^1.0",
         "mallardduck/blade-lucide-icons": "^1.23",
-        "mongodb/laravel-mongodb": "^5.1"
+        "mongodb/laravel-mongodb": "^5.1",
+        "saade/blade-iconsax": "^1.2",
+        "stripe/stripe-php": "^16.4"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

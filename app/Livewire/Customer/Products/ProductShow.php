@@ -32,7 +32,7 @@ class ProductShow extends Component
 
     public function addToCart()
     {
-        Cart::addProduct($this->product, $this->selectedSize);
+        Cart::addItem($this->product, $this->selectedSize);
         $this->dispatch('productAddedToCart');
     }
     public function render()

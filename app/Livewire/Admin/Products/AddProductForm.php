@@ -17,7 +17,6 @@ class AddProductForm extends Component
     public $price;
     public $discount;
     public $status = 1;
-
     public $images = [];
     public $variants = [];
 

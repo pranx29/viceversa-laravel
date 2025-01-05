@@ -1,10 +1,10 @@
 <div class="container mx-auto px-4 py-8">
     <h1 class="font-bold text-primary-foreground text-4xl mb-8">Cart</h1>
-    @if (collect($products)->isNotEmpty())
+    @if (collect($cartItems)->isNotEmpty())
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div class="lg:col-span-2 space-y-6">
-                @foreach ($products as $index => $product)
-                    @livewire('customer.cart.cart-item', ['product' => $product, 'index' => $index], key($index))
+                @foreach ($cartItems as $index => $item)
+                    @livewire('customer.cart.cart-item', ['item' => $item, 'index' => $index], key($index))
                 @endforeach
             </div>
 
@@ -14,29 +14,28 @@
                     <div class="space-y-4">
                         <div class="flex justify-between">
                             <span class="text-foreground">Subtotal</span>
-                            <span class="font-medium text-primary-foreground">${{ number_format($subtotal, 2) }}</span>
+                            <span class="font-medium text-primary-foreground">LKR {{ number_format($subtotal, 2) }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-foreground ">Shipping</span>
-                            <span class="font-medium text-primary-foreground">${{ number_format($shipping, 2) }}</span>
+                            <span class="font-medium text-primary-foreground">LKR {{ number_format($shipping, 2) }}</span>
                         </div>
                         <div class="border-t border-foreground my-4"></div>
                         <div class="flex justify-between text-primary-foreground">
                             <span class="text-xl font-bold">Total</span>
-                            <span class="text-xl font-bold">${{ number_format($total, 2) }}</span>
+                            <span class="text-xl font-bold">LKR {{ number_format($total, 2) }}</span>
                         </div>
                     </div>
-                    <button
-                        class="bg-button text-black py-3 rounded-full transition-colors duration-300 hover:bg-opacity-80 inline-flex items-center justify-center gap-2 mt-8 w-full">
-                        Proceed to Checkout
-                    </button>
+                    <x-primary-button class="w-full mt-4" wire:click="checkout">
+                        {{ __('Proceed to Checkout') }}
+                    </x-primary-button>
                 </div>
             </div>
         </div>
     @else
-        <p class="text-center text-primary-foreground text-3xl font-bold">Your cart is currently empty.</p>
+        <p class="text-center text-foreground text-3xl font-bold">Your cart is currently empty.</p>
         <div class="text-center mt-1 ">
-            <a href="" class="text-foreground underline hover:text-primary-foreground">Continue Shopping</a>
+            <a href="/" class="text-primary-foreground underline hover:text-foreground transition-all duration-300">Continue Shopping</a>
         </div>
     @endif
 </div>

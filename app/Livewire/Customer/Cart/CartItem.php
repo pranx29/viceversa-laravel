@@ -2,48 +2,60 @@
 
 namespace App\Livewire\Customer\Cart;
 
+use App\Models\Product;
 use Livewire\Component;
 
 class CartItem extends Component
 {
-    public $product;
+    public $productName;
+    public $price;
+    public $quantity;
+    public $image;
+    public $size;
     public $index;
     public $total;
 
-    public function mount($product, $index)
+    public function mount($item, $index)
     {
-        $this->product = $product;
+        $product = Product::find($item['product_id']);
+
+        $this->productName = $product->name;
+        $this->price = $product->price;
+        $this->quantity = $item['quantity'];
+        $this->image = $product->primaryImage();
+        $this->size = $product->sizes()->find($item['size_id'])->name;
         $this->index = $index;
+
         $this->calculateTotal();
     }
 
     public function increment()
     {
-        $this->product['quantity']++;
-        $this->dispatch('updateQuantity', $this->index, $this->product['quantity']);
+        $this->quantity++;
+        $this->dispatch('updateQuantity', $this->index, $this->quantity);
         $this->calculateTotal();
-
         $this->dispatch('productAddedToCart');
     }
     public function decrement()
     {
-        if ($this->product['quantity'] > 1) {
-            $this->product['quantity']--;
-            $this->dispatch('updateQuantity', $this->index, $this->product['quantity']);
+        if ($this->quantity > 1) {
+            $this->quantity--;
+            $this->dispatch('updateQuantity', $this->index, $this->quantity);
             $this->calculateTotal();
+            $this->dispatch('productRemoveFromCart');
         }
-        $this->dispatch('productRemoveFromCart');
+
     }
 
     public function calculateTotal()
     {
-        $this->total = $this->product['price'] * $this->product['quantity'];
+        $this->total = $this->price * $this->quantity;
     }
 
     public function remove()
     {
-        $this->dispatch('removeProduct', $this->index);
-        $this->dispatch('productRemoveFromCart', $this->product['quantity']);
+        $this->dispatch('removeItem', $this->index);
+        $this->dispatch('productRemoveFromCart', $this->quantity);
     }
 
     public function render()

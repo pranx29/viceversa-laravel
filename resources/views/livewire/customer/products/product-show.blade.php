@@ -53,7 +53,7 @@
                     </div>
 
                     <x-primary-button wire:click="addToCart" class="inline-flex items-center justify-center gap-2 px-6 py-2">
-                        <x-heroicon-o-shopping-cart class="h-5 w-5" />
+                    <x-iconsax-bro-shopping-cart class="h-5 w-5" />
                         Add to cart
                     </x-primary-button>
                 </div>

@@ -11,14 +11,20 @@ class Cart extends Model
 
     protected $fillable = [
         'user_id',
-        'guest_id',
-        'products',
-        'updated_at',
+        'items',
     ];
 
     protected $casts = [
-        'products' => 'array',
+        'items' => 'array',
     ];
+
+    private static function getGuestId()
+    {
+        if (!session()->has('guest_id')) {
+            session(['guest_id' => uniqid('guest_', true)]);
+        }
+        return session('guest_id');
+    }
 
     public function user()
     {
@@ -32,22 +38,21 @@ class Cart extends Model
 
     public static function getCart()
     {
-        $user_id = Auth::check() ? Auth::id() : null;
-        $guest_id = !$user_id ? session()->getId() : null;
-
-        $cart = Cart::where('user_id', $user_id)
-            ->orWhere('guest_id', $guest_id)
+        $userId = Auth::check() ? Auth::id() : self::getGuestId();
+        $cart = Cart::where('user_id', $userId)
             ->first();
-
         return $cart;
     }
 
     public static function getCartItems()
     {
         $cart = self::getCart();
-        // convert the JSON to an array
-        $cartItems = $cart ? $cart->products : [];
 
+        if (!$cart) {
+            return [];
+        }
+
+        $cartItems = $cart ? $cart->items : [];
         return $cartItems;
     }
 
@@ -65,38 +70,44 @@ class Cart extends Model
     }
 
     // Add product to cart
-    public static function addProduct($product, $selectedSize)
+    public static function addItem($product, $selectedSize)
     {
         $cart = self::getCart();
 
-        $products = $cart->products;
+        if (!$cart) {
+            $userId = Auth::check() ? Auth::id() : session()->get('guest_id');
+            $cart = new Cart();
+            $cart->user_id = $userId;
+            $cart->items = [];
+        }
+
+        $items = $cart->items;
 
         // Check if product with same size exists
-        $existingProductIndex = collect($products)->search(function ($item) use ($product, $selectedSize) {
-            return $item['product_id'] == $product->id && $item['size']['id'] == $selectedSize;
+        $existingProductIndex = collect($items)->search(function ($item) use ($product, $selectedSize) {
+            return $item['product_id'] == $product->id && $item['size_id'] == $selectedSize;
         });
 
         if ($existingProductIndex !== false) {
             // Update quantity if product exists
-            $products[$existingProductIndex]['quantity']++;
+            $items[$existingProductIndex]['quantity']++;
         } else {
             // Add the new product to the array
-            $products[] = [
+            $items[] = [
                 'product_id' => $product->id,
-                'name' => $product->name,
-                'size' => [
-                    'id' => $selectedSize,
-                    'name' => $product->sizes->where('id', $selectedSize)->first()->name,
-                ],
+                'size_id' => $selectedSize,
                 'quantity' => 1,
                 'price' => $product->price,
-                'discount' => $product->discount,
-                'image' => $product->primaryImage(),
             ];
         }
 
-        $cart->products = $products;
-        $cart->updated_at = now();
+        $totalPrice = array_reduce($items, function ($carry, $item) {
+            return $carry + ($item['price'] * $item['quantity']);
+        }, 0);
+
+        // Update the cart with the new items and total price
+        $cart->items = $items;
+        $cart->total_price = $totalPrice;
         $cart->save();
     }
 
@@ -104,23 +115,28 @@ class Cart extends Model
     public static function removeProduct($productId, $sizeId)
     {
         $cart = self::getCart();
-
-        $products = $cart->products;
+        $items = $cart->items;
 
         // Find the product with the same product_id and selected size
-        $productIndex = collect($products)->search(function ($item) use ($productId, $sizeId) {
-            return $item['product_id'] == $productId && $item['size']['id'] == $sizeId;
+        $itemIndex = collect($items)->search(function ($item) use ($productId, $sizeId) {
+            return $item['product_id'] == $productId && $item['size_id'] == $sizeId;
         });
 
         // If product is found, remove it from the array
-        if ($productIndex !== false) {
-            unset($products[$productIndex]);
-            $products = array_values($products); // Re-index the array
+        if ($itemIndex !== false) {
+            unset($items[$itemIndex]);
+            $items = array_values($items); // Re-index the array
 
             // Update the products array in the cart
-            $cart->products = $products;
+            $cart->items = $items;
 
-            // Update the cart's updated_at timestamp
+            // Recalculate the total price
+            $totalPrice = array_reduce($items, function ($carry, $item) {
+                return $carry + ($item['price'] * $item['quantity']);
+            }, 0);
+
+            // Update the cart's total price and updated_at timestamp
+            $cart->total_price = $totalPrice;
             $cart->updated_at = now();
 
             // Save the updated cart
@@ -133,24 +149,36 @@ class Cart extends Model
     {
         $cart = self::getCart();
 
-        $products = $cart->products;
+        $items = $cart->items;
 
         // Find the product with the same product_id and selected size
-        $productIndex = collect($products)->search(function ($item) use ($productId, $sizeId) {
-            return $item['product_id'] == $productId && $item['size']['id'] == $sizeId;
+        $itemIndex = collect($items)->search(function ($item) use ($productId, $sizeId) {
+            return $item['product_id'] == $productId && $item['size_id'] == $sizeId;
         });
 
         // If product is found, update the quantity
-        if ($productIndex !== false) {
-            $products[$productIndex]['quantity'] = $quantity;
+        if ($itemIndex !== false) {
+            $items[$itemIndex]['quantity'] = $quantity;
 
-            // Update the products array in the cart
-            $cart->products = $products;
+            // Update the items array in the cart
+            $cart->items = $items;
 
             // Update the cart's updated_at timestamp
             $cart->updated_at = now();
 
             // Save the updated cart
+            $cart->save();
+        }
+    }
+
+    // Clear the cart
+    public static function clearCart()
+    {
+        $cart = self::getCart();
+
+        if ($cart) {
+            $cart->items = [];
+            $cart->updated_at = now();
             $cart->save();
         }
     }

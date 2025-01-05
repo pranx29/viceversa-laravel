@@ -48,7 +48,7 @@ class AddProductImages extends Component
             $storedPath = $image->store('product_images', 'public');
 
             $imagePaths[] = [
-                'path' => $storedPath, 
+                'path' => $storedPath,
                 'order' => count($imagePaths) + 1,
             ];
         }

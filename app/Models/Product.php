@@ -34,11 +34,16 @@ class Product extends Model
     }
     public function sizes()
     {
-        return $this->belongsToMany(Size::class)->withPivot('quantity_in_stock');
+        return $this->belongsToMany(Size::class, 'product_size')->withPivot('quantity_in_stock');
     }
     public function images()
     {
         return $this->hasMany(ProductImage::class);
+    }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
     }
 
     public function primaryImage()
