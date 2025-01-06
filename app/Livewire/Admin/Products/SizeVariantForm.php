@@ -5,17 +5,24 @@ namespace App\Livewire\Admin\Products;
 use App\Models\Size;
 use Livewire\Component;
 
-class AddSizeVariant extends Component
+class SizeVariantForm extends Component
 {
     public $variants = [];
     public $sizes;
 
     protected $listeners = ['emitVariants'];
 
-    public function mount()
+    public function mount($variants = null)
     {
+        if ($variants) {
+            $this->variants = $variants;
+        }
+
         $this->sizes = Size::all();
-        $this->addVariant();
+
+        if (empty($this->variants)) {
+            $this->addVariant();
+        }
     }
     public function addVariant()
     {
@@ -40,6 +47,6 @@ class AddSizeVariant extends Component
 
     public function render()
     {
-        return view('livewire.admin.products.add-size-variant');
+        return view('livewire.admin.products.size-variant-form');
     }
 }

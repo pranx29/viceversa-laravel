@@ -8,45 +8,45 @@ use Livewire\Component;
 class ProductListing extends Component
 {
     public $products = [];
+    public $sortOption = '';
 
-    protected $listeners = ['filterProducts' => 'applyFilters'];
-
-    public function applyFilters($filters)
+    public function updatedSortOption($value)
     {
-        $searchTerm = $filters['searchTerm'];
-        $selectedCategories = $filters['selectedCategories'];
-        $selectedSizes = $filters['selectedSizes'];
-        $priceRange = $filters['priceRange'];
+        $this->sortOption = $value;
+        $this->applySort();
+    }
 
-        // Start a query to filter products
+    public function applySort()
+    {
         $query = Product::query();
 
-        // Apply search filter
-        if ($searchTerm) {
-            $query->where('name', 'like', '%' . $searchTerm . '%');
+        switch ($this->sortOption) {
+            case 'featured':
+                $query->orderBy('featured', 'desc');
+                break;
+            case 'priceLowToHigh':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'priceHighToLow':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'nameAZ':
+                $query->orderBy('name', 'asc');
+                break;
+            case 'nameZA':
+                $query->orderBy('name', 'desc');
+                break;
         }
 
-        // Apply category filter
-        if (!empty($selectedCategories)) {
-            $query->whereIn('category_id', $selectedCategories);
-        }
-
-        // Apply size filter
-        if (!empty($selectedSizes)) {
-            $query->whereHas('sizes', function ($q) use ($selectedSizes) {
-                $q->whereIn('size_id', $selectedSizes);
-            });
-        }
-
-        // Apply price range filter
-        $query->whereBetween('price', $priceRange);
-
-        // Get the filtered products and update the filtered products array
-        $this->products = $query->get();
+        $products = $query->get();
+        return redirect()->route('products.index', compact('products'));
     }
 
     public function render()
     {
         return view('livewire.customer.products.product-listing');
     }
+
 }
+
+

@@ -10,8 +10,9 @@ class CustomerController extends Controller
 {
     public function home()
     {
-        
-        $products = Product::all();
-        return view('customer.home.index', compact('products'));
+
+        $bestSellerProducts = Product::inRandomOrder()->take(4)->get();
+        $newArrivalProducts = Product::inRandomOrder()->take(4)->get();
+        return view('customer.home.index', compact('bestSellerProducts', 'newArrivalProducts'));
     }
 }

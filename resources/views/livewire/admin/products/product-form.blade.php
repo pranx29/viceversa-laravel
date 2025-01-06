@@ -1,20 +1,17 @@
 <div class="max-w-7xl mx-auto sm:px-12 lg:px-16 min-h-screen">
     <!-- Heading and Back arrow to products -->
     <div class="flex items-center gap-4 justify-between">
-        <div class="flex items-center gap-4">
-            <a href="{{ route('admin.products.index') }}" class="text-sm text-button transition hover:text-button/75">
-                <x-iconsax-bro-arrow-left-1 class="size-6" />
-            </a>
-            <h2 class="text-2xl font-bold text-primary-foreground sm:text-3xl">Create Product</h2>
-        </div>
+        <h2 class="text-2xl font-bold text-primary-foreground sm:text-3xl">
+            {{ $productId ? 'Edit Product' : 'Create Product' }}
+        </h2>
         <div class="flex justify-end gap-4">
-            <button
+            <button wire:click="discard"
                 class="rounded-lg bg-primary text-foreground px-4 py-2 text-sm font-medium hover:bg-opacity-80 transition-colors">
                 Discard
             </button>
             <button wire:click="prepareAndSave"
                 class="rounded-lg bg-button px-4 py-2 text-sm font-medium hover:bg-opacity-80 transition-colors">
-                Save
+                {{ $productId ? 'Update' : 'Save' }}
             </button>
         </div>
     </div>
@@ -31,7 +28,7 @@
         </div>
     @endif
 
-    <!-- Form to create a new product -->
+    <!-- Form to create or edit a product -->
     <div class="max-w-7xl mx-auto py-8">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Main Content -->
@@ -71,20 +68,20 @@
 
                         <div>
                             <x-input-label for="category" :value="__('Category')" />
-                            <x-select-input wire:model.defer="category_id" id="category" class="block w-1/2" required>
+                            <x-select-input wire:model.defer="categoryId" id="category" class="block w-1/2" required>
                                 <option value="">Select a category</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                                 @endforeach
                             </x-select-input>
-                            @error('category_id') <span class="text-red-500">{{ $message }}</span> @enderror
+                            @error('categoryId') <span class="text-red-500">{{ $message }}</span> @enderror
                         </div>
 
                     </div>
                 </div>
 
                 <!-- Product Images -->
-                @livewire('admin.products.add-product-images')
+                @livewire('admin.products.product-images-form', ['images' => $images, 'productId' => $productId])
 
 
             </div>
@@ -105,7 +102,7 @@
                     </div>
                 </div>
 
-                @livewire('admin.products.add-size-variant')
+                @livewire('admin.products.size-variant-form', ['variants' => $variants])
             </div>
         </div>
     </div>

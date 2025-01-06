@@ -9,6 +9,15 @@ class Sidebar extends Component
     public $isSidebarOpen = false;
     public $expandedMenus = [];
 
+    public function mount()
+    {
+        $this->expandedMenus = $this->getExpandedMenus();
+    }
+
+    public function getExpandedMenus()
+    {
+        return session()->get('expanded_menus', []);
+    }
 
     // Toggle sidebar for mobile view
     public function toggleSidebar()

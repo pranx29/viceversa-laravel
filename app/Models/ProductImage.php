@@ -15,6 +15,10 @@ class ProductImage extends Model
 
     public function getPathAttribute($value)
     {
+        if (filter_var($value, FILTER_VALIDATE_URL)) {
+            return $value;
+        }
+
         return asset('storage/' . $value);
     }
 }

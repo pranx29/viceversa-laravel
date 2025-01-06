@@ -17,11 +17,12 @@ class CategorySeeder extends Seeder
             ['name' => 'T-Shirt', 'image' => 'https://img.icons8.com/sf-regular-filled/48/t-shirt.png'],
             ['name' => 'Jacket', 'image' => 'https://img.icons8.com/sf-regular-filled/48/jacket.png'],
             ['name' => 'Pant', 'image' => 'https://img.icons8.com/sf-ultralight-filled/50/trousers.png'],
-            ['name' => 'Shirt', 'image' => 'https://img.icons8.com/sf-regular-filled/48/shirt.png']
+            ['name' => 'Shirt', 'image' => 'https://img.icons8.com/sf-regular-filled/48/shirt.png'],
+            ['name' => 'Shorts', 'image' => 'https://img.icons8.com/ios-filled/50/shorts.png']
         ];
 
         foreach ($categories as $category) {
-            Category::create(['name' => $category]);
+            Category::create($category);
         }
     }
 }

@@ -10,10 +10,10 @@
 
         <div class="relative bg-primary p-3">
             <div class="mt-1.5 flex items-center justify-between text-primary-foreground">
-                <h3 class="text-base group-hover:underline group-hover:underline-offset-4">
+                <h3 class="text-base group-hover:underline group-hover:underline-offset-4 w-1/2 truncate">
                     {{ $product->name }}
                 </h3>
-                <p class="tracking-wide">LKR {{ number_format($product->price, 2) }}</p>
+                <p class="tracking-wide whitespace-nowrap">LKR {{ number_format($product->price, 2) }}</p>
             </div>
             @if(!$showAddToCart)
                 <div class="mt-1.5 flex items-center justify-between text-foreground">

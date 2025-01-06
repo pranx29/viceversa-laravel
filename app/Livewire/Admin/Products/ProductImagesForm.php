@@ -6,13 +6,22 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 
-class AddProductImages extends Component
+class ProductImagesForm extends Component
 {
     use WithFileUploads;
 
     public $images = [];
-    public $maxImages = 6;
+    public $maxImages = 7;
+    public $productId;
+
     protected $listeners = ['emitImages'];
+
+    public function mount($images = null, $productId = null)
+    {
+        $this->productId = $productId;
+        $this->images = $images;
+
+    }
 
     public function updatedImages()
     {
@@ -59,6 +68,6 @@ class AddProductImages extends Component
 
     public function render()
     {
-        return view('livewire.admin.products.add-product-images');
+        return view('livewire.admin.products.product-images-form');
     }
 }

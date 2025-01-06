@@ -11,7 +11,7 @@ class ProductController extends Controller
     public function index()
     {
 
-        $products = Product::paginate(1);
+        $products = Product::paginate(10);
         return view('admin.products.index', [
             'products' => $products,
         ]);
@@ -21,11 +21,6 @@ class ProductController extends Controller
     public function create()
     {
         return view('admin.products.create');
-    }
-
-    public function store(Request $request)
-    {
-        dd($request->all());
     }
 
     public function show(Product $product)
