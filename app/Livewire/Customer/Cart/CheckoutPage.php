@@ -6,6 +6,8 @@ use Auth;
 use Stripe\Stripe;
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\Address;
+use App\Models\Product;
 use Livewire\Component;
 use App\Models\OrderItem;
 use Stripe\PaymentIntent;
@@ -17,7 +19,8 @@ class CheckoutPage extends Component
     public $lastName;
     public $address;
     public $city;
-    public $phone;
+    public $postalCode;
+    public $phoneNumber;
     public $cardNumber;
     public $expiryDate;
     public $cvv;
@@ -32,26 +35,44 @@ class CheckoutPage extends Component
         'lastName' => 'nullable|string|max:255',
         'address' => 'required|string|max:255',
         'city' => 'required|string|max:255',
-        'phone' => 'required|numeric|digits_between:10,15',
+        'postalCode' => 'required|string|max:255',
+        'phoneNumber' => 'required|numeric|digits_between:10,15',
         'cardNumber' => 'required|numeric|digits:16',
         'expiryDate' => ['required', 'regex:/^(0[1-9]|1[0-2])\/\d{2}$/'],
         'cvv' => 'required|numeric|digits:3',
     ];
 
 
-    public function mount($cartItems, $shippingCost)
+    public function mount()
     {
-        $this->selectedAddress = auth()->user()->addresses->first()->id;
-        $this->cartItems = $cartItems;
-        $this->shippingCost = $shippingCost;
+        $this->shippingCost = Order::SHIPPING_COST;
+        $this->getCartItemsProperty();
         $this->getTotalAmountProperty();
+    }
+
+    public function getCartItemsProperty()
+    {
+        $cartItems = Cart::getCartItems();
+        $this->cartItems = [];
+        foreach ($cartItems as $item) {
+            $product = Product::find($item['product_id']);
+            $this->cartItems[] = [
+                'product_id' => $product->id,
+                'name' => $product->name,
+                'price' => $product->price,
+                'discount' => $product->discount,
+                'quantity' => $item['quantity'],
+                'size' => $product->sizes->find($item['size_id']),
+                'image' => $product->primaryImage(),
+            ];
+        }
     }
 
     // Get the total amount of the cart
     public function getTotalAmountProperty()
     {
         $this->totalAmount = collect($this->cartItems)->sum(function ($item) {
-            return $item['price'] * $item['quantity'];
+            return ($item['price'] - $item['discount']) * $item['quantity'];
         });
     }
 
@@ -75,6 +96,7 @@ class CheckoutPage extends Component
                 $order = Order::create([
                     'user_id' => auth()->id(),
                     'address_id' => $this->selectedAddress,
+                    'shipping_cost' => $this->shippingCost,
                 ]);
 
                 foreach ($this->cartItems as $item) {
@@ -84,6 +106,14 @@ class CheckoutPage extends Component
                         'size_id' => $item['size']['id'],
                         'quantity' => $item['quantity'],
                         'price' => $item['price'] - $item['discount'],
+                    ]);
+                }
+
+                // Adjust the stock
+                foreach ($this->cartItems as $item) {
+                    $product = Product::find($item['product_id']);
+                    $product->sizes()->updateExistingPivot($item['size']['id'], [
+                        'quantity_in_stock' => $item['size']['quantity_in_stock'] - $item['quantity'],
                     ]);
                 }
 
@@ -103,6 +133,77 @@ class CheckoutPage extends Component
         ]);
     }
 
+    public function guestUserCheckout()
+    {
+        $this->validate([
+            'email' => 'required|email',
+            'firstName' => 'required|string|max:255',
+            'lastName' => 'nullable|string|max:255',
+            'address' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'postalCode' => 'required|string|max:255',
+            'phoneNumber' => 'required|numeric|digits_between:10,15',
+            'cardNumber' => 'required|numeric|digits:16',
+            'expiryDate' => ['required', 'regex:/^(0[1-9]|1[0-2])\/\d{2}$/'],
+            'cvv' => 'required|numeric|digits:3',
+        ]);
+
+        $paymentService = new \App\Services\PaymentService();
+        $paymentIntent = $paymentService->createPaymentIntent($this->totalAmount * 100);
+
+        if ($paymentIntent->status === 'succeeded') {
+            \DB::beginTransaction();
+            try {
+
+                $address = Address::create([
+                    'user_id' => null,
+                    'first_name' => $this->firstName,
+                    'last_name' => $this->lastName,
+                    'street' => $this->address,
+                    'city' => $this->city,
+                    'postal_code' => $this->postalCode,
+                    'phone_number' => $this->phoneNumber,
+                ]);
+
+                $order = Order::create([
+                    'user_id' => null,
+                    'address_id' => $address->id,
+                    'guest_email' => $this->email,
+                    'shipping_cost' => $this->shippingCost,
+                ]);
+
+                foreach ($this->cartItems as $item) {
+                    OrderItem::create([
+                        'order_id' => $order->id,
+                        'product_id' => $item['product_id'],
+                        'size_id' => $item['size']['id'],
+                        'quantity' => $item['quantity'],
+                        'price' => $item['price'] - $item['discount'],
+                    ]);
+                }
+
+                // Adjust the stock
+                foreach ($this->cartItems as $item) {
+                    $product = Product::find($item['product_id']);
+                    $product->sizes()->updateExistingPivot($item['size']['id'], [
+                        'quantity_in_stock' => $item['size']['quantity_in_stock'] - $item['quantity'],
+                    ]);
+                }
+
+                \DB::commit();
+
+                // Remove the cart items
+                Cart::clearCart();
+
+            } catch (\Exception $e) {
+                \DB::rollBack();
+                dd($e->getMessage());
+            }
+        }
+
+        dd('Order placed successfully');
+    }
+
     public function placeOrder()
     {
         // Registered user
@@ -110,56 +211,9 @@ class CheckoutPage extends Component
             $this->registeredUserCheckout();
         } else {
             // Guest user
-            $this->validate([
-                'email' => 'required|email',
-                'firstName' => 'required|string|max:255',
-                'lastName' => 'nullable|string|max:255',
-                'address' => 'required|string|max:255',
-                'city' => 'required|string|max:255',
-                'phone' => 'required|numeric|digits_between:10,15',
-            ]);
+            $this->guestUserCheckout();
 
-            $this->validate([
-                'cardNumber' => 'required|numeric|digits:16',
-                'expiryDate' => ['required', 'regex:/^(0[1-9]|1[0-2])\/\d{2}$/'],
-                'cvv' => 'required|numeric|digits:3',
-            ]);
-
-            $this->storeOrder();
         }
-        // redirect()->route('cart.checkout.success');
-
-
-
-
-
-
-
-        // // Inject the PaymentService in your controller
-        // $paymentService = new \App\Services\PaymentService();
-
-        // $order = [
-        //     'email' => $this->email,
-        //     'first_name' => $this->firstName,
-        //     'last_name' => $this->lastName,
-        //     'address' => $this->address,
-        //     'city' => $this->city,
-        //     'phone' => $this->phone,
-        //     'cart_items' => $this->cartItems,
-        //     'shipping_cost' => $this->shippingCost,
-        //     'total_amount' => $this->totalAmount,
-        // ];
-
-        // // Example: After processing payment
-        // $paymentIntent = $paymentService->createPaymentIntent($this->totalAmount * 100);
-
-        // // After client confirms the payment, verify its status
-        // $result = $paymentService->attachPaymentToOrder($paymentIntent->id, $order);
-
-        // if ($result['success']) {
-        //     // redirect()->route('customer.order', $order);
-        // }
-
     }
 
     public function render()

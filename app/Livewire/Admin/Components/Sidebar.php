@@ -11,12 +11,24 @@ class Sidebar extends Component
 
     public function mount()
     {
+        // Expand the menu for the current URL
         $this->expandedMenus = $this->getExpandedMenus();
     }
 
+    // Get the expanded menus based on the current URL
     public function getExpandedMenus()
     {
-        return session()->get('expanded_menus', []);
+        $currentUrl = request()->path();
+        $expandedMenus = [];
+
+        if (strpos($currentUrl, 'sizes') !== false) {
+            $expandedMenus[] = 'products';
+        } elseif (strpos($currentUrl, 'categories') !== false) {
+            $expandedMenus[] = 'products';
+        } elseif (strpos($currentUrl, 'products') !== false) {
+            $expandedMenus[] = 'products';
+        }
+        return $expandedMenus;
     }
 
     // Toggle sidebar for mobile view

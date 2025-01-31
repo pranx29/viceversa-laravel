@@ -36,7 +36,7 @@ class ProductFilter extends Component
         $this->searchTerm = $filtersArray['search'] ?? '';
         $this->selectedCategories = $filtersArray['categories'] ?? [];
         $this->selectedSizes = $filtersArray['sizes'] ?? [];
-        $this->priceRange = $filtersArray['price'] ?? [0, Product::max('price')];
+        $this->selectedPriceRange = $filtersArray['price'] ?? [0, Product::max('price')];
     }
 
     public function updated()

@@ -3,6 +3,8 @@
 namespace App\Livewire\Customer\Cart;
 
 use App\Models\Cart;
+use App\Models\Order;
+use App\Models\Product;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 
@@ -10,7 +12,7 @@ class CartPage extends Component
 {
     public $cartItems = [];
     public $subtotal = 0;
-    public $shipping = 250.00;
+    public $shipping = Order::SHIPPING_COST;
     public $total = 0;
     protected $listeners = ['updateQuantity', 'removeItem'];
 
@@ -42,7 +44,12 @@ class CartPage extends Component
 
     public function calculateTotals()
     {
-        $this->subtotal = collect($this->cartItems)->sum(fn($product) => $product['price'] * $product['quantity']);
+        foreach ($this->cartItems as &$item) {
+            $product = Product::find($item['product_id']);
+            $item['price'] = $product->price;
+            $item['discount'] = $product->discount;
+        }
+        $this->subtotal = collect($this->cartItems)->sum(fn($product) => ($product['price'] - $product['discount']) * $product['quantity']);
         $this->total = $this->subtotal + $this->shipping;
     }
 

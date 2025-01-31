@@ -16,7 +16,7 @@ new class extends Component {
 }; ?>
 
 <header>
-    <div class="mx-auto max-w-screen-xl p-4 sm:px-6 lg:px-8">
+    <div class="container mx-auto px-4 py-8">
         <div class="flex h-16 items-center justify-between">
             <div class="md:flex md:items-center md:gap-12">
                 <a class="block text-teal-600" href="#">
@@ -29,8 +29,8 @@ new class extends Component {
                 <nav aria-label="Global">
                     <x-nav-link href="{{ route('home') }}">{{ __('Home') }}</x-nav-link>
                     <x-nav-link href="{{ route('products.index')}}">{{ __('Shop') }}</x-nav-link>
-                    <x-nav-link>{{ __('Collections') }}</x-nav-link>
-                    <x-nav-link>{{ __('Contact') }}</x-nav-link>
+                    <!-- <x-nav-link>{{ __('Collections') }}</x-nav-link> -->
+                    <!-- <x-nav-link>{{ __('Contact') }}</x-nav-link> -->
                 </nav>
             </div>
 
@@ -41,8 +41,13 @@ new class extends Component {
 
                     @if (Auth::guest())
                         <x-nav-link class="bg-primary" href="{{ route('login') }}">{{ __('Login') }}</x-nav-link>
-                    @else
+                    @elseif (!Auth::user()->isAdmin())
                         <a href="{{ route('profile') }}"
+                            class="hover:bg-white text-foreground hover:text-black transition-colors duration-300 rounded-md bg-primary p-2">
+                            <x-iconsax-bro-user-octagon class="w-6 h-6" />
+                        </a>
+                    @else
+                        <a href="{{ route('admin.dashboard') }}"
                             class="hover:bg-white text-foreground hover:text-black transition-colors duration-300 rounded-md bg-primary p-2">
                             <x-iconsax-bro-user-octagon class="w-6 h-6" />
                         </a>
@@ -73,7 +78,7 @@ new class extends Component {
                             <x-nav-link href="{{ route('home') }}">{{ __('Home') }}</x-nav-link>
                             <x-nav-link>{{ __('Shop') }}</x-nav-link>
                             <x-nav-link>{{ __('Collections') }}</x-nav-link>
-                            <x-nav-link>{{ __('Contact') }}</x-nav-link>
+                            <!-- <x-nav-link>{{ __('Contact') }}</x-nav-link> -->
                         </nav>
                     </div>
                 </div>

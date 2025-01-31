@@ -10,8 +10,11 @@ class ProductController extends Controller
 {
     public function index()
     {
-
-        $products = Product::paginate(10);
+        if(request()->has('active')) {
+            $products = Product::where('is_active', request('active'))->paginate(10);
+        } else {
+            $products = Product::paginate(10);
+        }
         return view('admin.products.index', [
             'products' => $products,
         ]);
@@ -23,8 +26,10 @@ class ProductController extends Controller
         return view('admin.products.create');
     }
 
-    public function show(Product $product)
+    public function show($slug)
     {
+        $product = Product::where('slug', $slug)->first();
+
         return view('admin.products.show', [
             'product' => $product,
         ]);

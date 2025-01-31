@@ -24,16 +24,16 @@ new #[Layout('layouts.app')] class extends Component
         if (auth()->user()->isAdmin()) {
             $this->redirectIntended(default: route('admin.dashboard', absolute: false), navigate: true);
         } else {
-            $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+            $this->redirectIntended(default: route('profile', absolute: false), navigate: true);
         }
     }
 }
 ?>
 
-<section class="flex items-center justify-center px-4 py-8">
+<section class="flex items-center justify-center container mx-auto px-4 py-8">
     <x-auth-session-status class="mb-4" :status="session('status')" />
     <!-- Left Section - Login Form -->
-    <div class="w-full max-w-5xl grid md:grid-cols-2 overflow-hidden gap-8">
+    <div class="w-full grid md:grid-cols-2 overflow-hidden gap-8">
         <form wire:submit="login" class="p-8 space-y-6 bg-primary rounded-lg">
             <div>
                 <h2 class="text-4xl font-bold text-primary-foreground">

@@ -20,7 +20,7 @@ class ProductForm extends Component
     public $images = [];
     public $variants = [];
 
-    protected $listeners = ['sizeVariants' => 'updateVariants', 'productImages' => 'updateImages', 'save'];
+    protected $listeners = ['updateVariants', 'productImages' => 'updateImages', 'save'];
 
     public function mount($product = null)
     {
@@ -33,7 +33,7 @@ class ProductForm extends Component
             $this->categoryId = $product->category_id;
             $this->price = $product->price;
             $this->discount = $product->discount ?? 0;
-            $this->status = $product->status;
+            $this->status = $product->is_active;
             $this->images = $product->images->toArray();
             $this->variants = $product->sizes->map(function ($size) {
                 return [
@@ -60,7 +60,7 @@ class ProductForm extends Component
         $this->validate(
             [
                 'name' => 'required|string|max:25|min:3',
-                'description' => 'required|string',
+                'description' => 'required|string|min:10|max:256',
                 'categoryId' => 'required|exists:categories,id',
                 'price' => 'required|numeric|min:0',
                 'discount' => 'nullable|numeric|min:0',
@@ -71,28 +71,15 @@ class ProductForm extends Component
         \DB::beginTransaction();
 
         try {
-            if ($this->productId) {
-                $product = \App\Models\Product::findOrFail($this->productId);
-                $product->update([
-                    'name' => $this->name,
-                    'description' => $this->description,
-                    'category_id' => $this->categoryId,
-                    'price' => $this->price,
-                    'discount' => $this->discount,
-                    'status' => $this->status,
-                ]);
-                $product->images()->delete();
-                $product->sizes()->detach();
-            } else {
-                $product = \App\Models\Product::create([
-                    'name' => $this->name,
-                    'description' => $this->description,
-                    'category_id' => $this->categoryId,
-                    'price' => $this->price,
-                    'discount' => $this->discount,
-                    'status' => $this->status,
-                ]);
-            }
+            $product = \App\Models\Product::create([
+                'name' => $this->name,
+                'description' => $this->description,
+                'category_id' => $this->categoryId,
+                'price' => $this->price,
+                'discount' => $this->discount,
+                'status' => $this->status,
+            ]);
+
 
             foreach ($this->images as $image) {
                 $product->images()->create([
@@ -111,19 +98,49 @@ class ProductForm extends Component
             return;
         }
         session()->flash('message', 'Product saved successfully');
-        redirect()->route('admin.products.show', $product);
+        redirect()->route('admin.products.show', $product->slug);
+    }
 
+    public function updateProduct()
+    {
+        $this->validate(
+            [
+                'name' => 'required|string|max:25|min:3',
+                'description' => 'required|string|min:10|max:256',
+                'categoryId' => 'required|exists:categories,id',
+                'price' => 'required|numeric|min:0',
+                'discount' => 'nullable|numeric|min:0',
+                'status' => 'required|in:1,0',
+            ],
+        );
+
+        $product = \App\Models\Product::findOrFail($this->productId);
+        $product->update([
+            'name' => $this->name,
+            'description' => $this->description,
+            'category_id' => $this->categoryId,
+            'price' => $this->price,
+            'discount' => $this->discount,
+            'is_active' => $this->status,
+        ]);
+
+        $product->sizes()->detach();
+        foreach ($this->variants as $variant) {
+            $product->sizes()->attach($variant['size_id'], ['quantity_in_stock' => $variant['stock']]);
+        }
+
+        session()->flash('message', 'Product updated successfully');
+        redirect()->route('admin.products.show', $product->slug);
     }
 
     public function prepareAndSave()
     {
-        // TODO: Complete update product 
-        if ($this->productId) {
-            session()->flash('message', 'Product updated successfully');
-            return;
-        }
         $this->dispatch('emitVariants')->to('admin.products.size-variant-form');
-        $this->dispatch('emitImages')->to('admin.products.product-images-form');
+        if ($this->productId) {
+            $this->updateProduct();
+        } else {
+            $this->dispatch('emitImages')->to('admin.products.product-images-form');
+        }
     }
 
     public function discard()

@@ -42,13 +42,13 @@
                         <div>
                             <x-input-label for="name" :value="__('Name')" />
                             <x-text-input wire:model.defer="name" id="name" type="text" class="w-full" placeholder="" />
-                            @error('name') <span class="text-red-500">{{ $message }}</span> @enderror
+                            <x-input-error :messages="$errors->get('name')" class="mt-2" />
                         </div>
                         <div>
                             <x-input-label for="description" :value="__('Description')" />
                             <x-textarea wire:model.defer="description" id="description" rows="4" class="block w-full"
                                 required></x-textarea>
-                            @error('description') <span class="text-red-500">{{ $message }}</span> @enderror
+                            <x-input-error :messages="$errors->get('description')" class="mt-2" />
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -56,13 +56,13 @@
                                 <x-input-label for="price" :value="__('Price')" />
                                 <x-text-input wire:model.defer="price" id="price" type="number" min="0"
                                     class="block w-full" required />
-                                @error('price') <span class="text-red-500">{{ $message }}</span> @enderror
+                                <x-input-error :messages="$errors->get('price')" class="mt-2" />
                             </div>
                             <div>
                                 <x-input-label for="discount" :value="__('Discount')" />
                                 <x-text-input wire:model.defer="discount" id="discount" type="number" min="0"
                                     class="block w-full" />
-                                @error('discount') <span class="text-red-500">{{ $message }}</span> @enderror
+                                <x-input-error :messages="$errors->get('discount')" class="mt-2" />
                             </div>
                         </div>
 
@@ -74,7 +74,7 @@
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                                 @endforeach
                             </x-select-input>
-                            @error('categoryId') <span class="text-red-500">{{ $message }}</span> @enderror
+                            <x-input-error :messages="$errors->get('categoryId')" class="mt-2" />
                         </div>
 
                     </div>

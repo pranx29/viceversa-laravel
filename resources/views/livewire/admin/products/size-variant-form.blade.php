@@ -14,26 +14,21 @@
                     @foreach ($variants as $index => $variant)
                         <tr>
                             <td class="py-3 px-2">
-                                <x-select-input wire:model="variants.{{ $index }}.size_id" required>
+                                <x-select-input wire:model.live="variants.{{ $index }}.size_id" required>
                                     @foreach ($sizes as $size)
                                         <option value="{{ $size->id }}">{{ $size->name }}</option>
                                     @endforeach
                                 </x-select-input>
                             </td>
                             <td class="py-3 px-2">
-                                <x-text-input wire:model="variants.{{ $index }}.stock" type="number" min="0" required
+                                <x-text-input wire:model.live="variants.{{ $index }}.stock" type="number" min="0" required
                                     class="w-20" />
                             </td>
                             <td class="py-3 px-2">
                                 <button wire:click.prevent="removeVariant({{ $index }})"
                                     class="text-foreground text-sm hover:text-foreground/80 transition duration-300 ease-in-out">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                        <path d="M3 6h18"></path>
-                                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                                    </svg>
+
+                                    <x-iconsax-lin-trash class="size-5" />
                                 </button>
                             </td>
                         </tr>

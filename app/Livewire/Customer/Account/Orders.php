@@ -3,13 +3,14 @@
 namespace App\Livewire\Customer\Account;
 
 use Auth;
+use App\Models\Order;
 use Livewire\Component;
 
 class Orders extends Component
 {
     public $orders = [];
     public $selectedOrder = null;
-    public $shippingCost = 250;
+    public $shippingCost = Order::SHIPPING_COST;
 
     public function mount()
     {

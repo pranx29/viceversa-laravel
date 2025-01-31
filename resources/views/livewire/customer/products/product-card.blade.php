@@ -4,7 +4,7 @@
             <img src="{{ $product->primaryImage() }}" alt="{{ $product->name }}"
                 class="absolute inset-0 h-full w-full object-cover opacity-100 group-hover:opacity-0" />
 
-            <img src="{{ $product->secondaryImage()}}" alt="{{ $product->name }}"
+            <img src="{{ $product->secondaryImage() }}" alt="{{ $product->name }}"
                 class="absolute inset-0 h-full w-full object-cover opacity-0 group-hover:opacity-100" />
         </div>
 
@@ -13,23 +13,36 @@
                 <h3 class="text-base group-hover:underline group-hover:underline-offset-4 w-1/2 truncate">
                     {{ $product->name }}
                 </h3>
-                <p class="tracking-wide whitespace-nowrap">LKR {{ number_format($product->price, 2) }}</p>
+
+                @if($product->discount && $product->discounted < $product->price)
+                    <div class="flex flex-col items-end">
+                        <p class="text-sm text-primary-foreground font-semibold">
+                            LKR {{ number_format($product->price - $product->discount, 2) }}
+                        </p>
+                        <p class="text-xs text-foreground line-through">
+                            LKR {{ number_format($product->price, 2) }}
+                        </p>
+                    </div>
+                @else
+                    <p class="tracking-wide whitespace-nowrap">
+                        LKR {{ number_format($product->price, 2) }}
+                    </p>
+                @endif
             </div>
+
             @if(!$showAddToCart)
                 <div class="mt-1.5 flex items-center justify-between text-foreground">
-
-                    <p class="tracking-wide text-xs capitalize">
+                    <p class="tracking-wide text-sm capitalize">
                         {{ $product->category->name }}
                     </p>
-
-                    <p class="text-xs uppercase tracking-wide"> {{ $product->sizes->count()}} Sizes</p>
+                    <p class="text-sm uppercase tracking-wide"> {{ $product->sizes->count() }} Sizes</p>
                 </div>
             @endif
     </a>
 
     @if($showAddToCart)
         <div class="mt-1.5 flex flex-col justify-between text-foreground gap-2">
-            <p class="tracking-wide text-xs capitalize">
+            <p class="tracking-wide text-sm capitalize">
                 {{ $product->category->name }}
             </p>
 

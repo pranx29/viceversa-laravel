@@ -28,7 +28,15 @@ class ProductController extends Controller
 
             // Apply search filter
             if ($searchTerm) {
-                $query->where('name', 'like', '%' . $searchTerm . '%');
+                $query->where(function ($q) use ($searchTerm) {
+                    $q->where('name', 'like', '%' . $searchTerm . '%')
+                        ->orWhereHas('category', function ($q) use ($searchTerm) {
+                            $q->where('name', 'like', '%' . $searchTerm . '%');
+                        })
+                        ->orWhereHas('sizes', function ($q) use ($searchTerm) {
+                            $q->where('name', 'like', '%' . $searchTerm . '%');
+                        });
+                });
             }
 
             // Apply category filter
@@ -55,9 +63,25 @@ class ProductController extends Controller
             $products = Product::latest()->get();
         }
 
+        if (request()->has('sort')) {
+            $sort = request()->input('sort');
+            if ($sort == 'priceLowToHigh') {
+                $products = $products->sortBy('price');
+            } elseif ($sort == 'priceHighToLow') {
+                $products = $products->sortByDesc('price');
+            } elseif ($sort == 'nameAZ') {
+                $products = $products->sortBy('name');
+            } elseif ($sort == 'nameZA') {
+                $products = $products->sortByDesc('name');
+            }
+        }
+
         // Return the view with filtered products
         return view('customer.product.index', compact('products'));
     }
+
+
+
 
 
 

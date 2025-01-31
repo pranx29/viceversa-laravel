@@ -41,6 +41,7 @@
                     <a href="{{ route('profile') }}" class="text-primary-foreground hover:text-foreground transition-all duration-300 text-start">
                         Add new address
                     </a>
+                    <x-input-error :messages="$errors->get('selectedAddress')" />
                 </div>
             @else
                 <div class=" bg-primary shadow rounded-lg p-6">
@@ -84,17 +85,27 @@
                             oninput="this.value = this.value.replace(/[^a-zA-Z0-9\s,.-]/g, '')" />
                         <x-input-error :messages="$errors->get('address')" />
                     </div>
-                    <div>
-                        <x-input-label for="city" :value="__('City')" />
+
+                    <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-2">
+                <x-input-label for="city" :value="__('City')" />
                         <x-text-input wire:model.defer="city" id="city" type="text" class="w-full"
                             oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" />
                         <x-input-error :messages="$errors->get('city')" />
-                    </div>
+                </div>
+                <div class="space-y-2">
+                    <x-input-label for="postalCode" :value="__('Postal Code')" />
+                    <x-text-input wire:model.defer="postalCode" id="postalCode" type="text" class="w-full"
+                        oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '')" />
+                    <x-input-error :messages="$errors->get('postalCode')" />
+                </div>
+            </div>
+
                     <div>
-                        <x-input-label for="phone" :value="__('Phone Number')" />
-                        <x-text-input wire:model.defer="phone" id="phone" type="tel" class="w-full"
+                        <x-input-label for="phoneNumber" :value="__('Phone Number')" />
+                        <x-text-input wire:model.defer="phoneNumber" id="phoneNumber" type="tel" class="w-full"
                             oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
-                        <x-input-error :messages="$errors->get('phone')" />
+                        <x-input-error :messages="$errors->get('phoneNumber')" />
                     </div>
                 </div>
             </div>
@@ -146,9 +157,20 @@
                                     </p>
                                 </div>
                             </div>
-                            <p class="font-medium text-primary-foreground">LKR
-                                {{ number_format($item['price'] * $item['quantity'], 2) }}
-                            </p>
+                            @if ($item['discount'])
+                               <div class="flex items-center space-x-4">
+                                    <p class="font-medium text-foreground line-through">LKR
+                                        {{ number_format($item['price'] * $item['quantity'], 2) }}
+                                    </p>
+                                    <p class="font-medium text-primary-foreground">LKR
+                                        {{ number_format(($item['price'] - $item['discount']) * $item['quantity'], 2) }}
+                                    </p>
+                               </div>
+                            @else
+                                <p class="font-medium text-primary-foreground">LKR
+                                    {{ number_format($item['price'] * $item['quantity'], 2) }}
+                                </p>
+                            @endif
                         </div>
                     @endforeach
 
@@ -157,8 +179,7 @@
                         <div class="flex justify-between">
                             <span>Subtotal</span>
                             <span>LKR
-                                {{ number_format(collect($cartItems)->sum(function ($item) {
-    return $item['price'] * $item['quantity']; }), 2) }}</span>
+                                {{ number_format($totalAmount, 2) }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span>Shipping</span>
@@ -166,7 +187,7 @@
                         </div>
                         <div class="flex justify-between font-semibold">
                             <span>Total</span>
-                            <span>LKR {{ number_format($totalAmount + $shippingCost, 2) }}</span>
+                                <span>LKR {{ number_format($totalAmount + $shippingCost, 2) }}</span>
                         </div>
                     </div>
 

@@ -24,44 +24,36 @@
             <div class="text-sm text-red-500 text-center">Maximum of 6 images selected.</div>
         @endif
 
-        @if($productId && count($images) > 0)
-            <div class="grid grid-cols-3 gap-4">
-                @foreach ($images as $index => $image)
-                    <div class="aspect-square bg-secondary rounded-lg relative group">
+        <div class="grid grid-cols-3 gap-4">
+            @foreach ($images as $index => $image)
+                <div class="aspect-square bg-secondary rounded-lg relative group">
+                    <!-- Display image -->
+                    @if(is_array($image) && isset($image['path']))
+                        <!-- Existing image -->
                         <img src="{{ $image['path'] }}" alt="Product Image {{ $index + 1 }}"
                             class="w-full h-full object-cover rounded-lg">
-                        <div
-                            class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <input type="number" value="{{ $index + 1 }}" min="1" max="{{ count($images) }}"
-                                class="w-16 px-2 py-1 bg-white text-black rounded-md text-center"
-                                wire:change="updateImageOrder({{ $index }}, $event.target.value)">
-                        </div>
-                        <button wire:click="removeImage({{ $index }})"
-                            class="absolute top-2 right-2 bg-red-500 text-white rounded-md w-6 h-6 flex items-center justify-center">
-                            &times;
-                        </button>
-                    </div>
-                @endforeach
-            </div>
-        @else
-            <div class="grid grid-cols-3 gap-4">
-                @foreach ($images as $index => $image)
-                    <div class="aspect-square bg-secondary rounded-lg relative group">
+                    @else
+                        <!-- Newly uploaded temporary image -->
                         <img src="{{ $image->temporaryUrl() }}" alt="Product Image {{ $index + 1 }}"
                             class="w-full h-full object-cover rounded-lg">
-                        <div
-                            class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <input type="number" value="{{ $index + 1 }}" min="1" max="{{ count($images) }}"
-                                class="w-16 px-2 py-1 bg-white text-black rounded-md text-center"
-                                wire:change="updateImageOrder({{ $index }}, $event.target.value)">
-                        </div>
-                        <button wire:click="removeImage({{ $index }})"
-                            class="absolute top-2 right-2 bg-red-500 text-white rounded-md w-6 h-6 flex items-center justify-center">
-                            &times;
-                        </button>
+                    @endif
+
+                    <!-- Overlay for reordering -->
+                    <div
+                        class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <input type="number" value="{{ $index + 1 }}" min="1" max="{{ count($images) }}"
+                            class="w-16 px-2 py-1 bg-white text-black rounded-md text-center"
+                            wire:change="updateImageOrder({{ $index }}, $event.target.value)">
                     </div>
-                @endforeach
-            </div>
-        @endif
+
+                    <!-- Remove image button -->
+                    <button wire:click="removeImage({{ $index }})"
+                        class="absolute top-2 right-2 bg-red-500 text-white rounded-md w-6 h-6 flex items-center justify-center">
+                        &times;
+                    </button>
+                </div>
+            @endforeach
+        </div>
+
     </div>
 </div>

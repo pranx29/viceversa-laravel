@@ -1,5 +1,5 @@
-<section>
-    <div class="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+<section id="best-sellers">
+    <div class="container mx-auto px-4 py-8">
         <header>
             <h2 class="text-2xl font-bold text-primary-foreground sm:text-4xl">
                 Best Sellers

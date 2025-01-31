@@ -18,7 +18,7 @@ class SizeVariantForm extends Component
             $this->variants = $variants;
         }
 
-        $this->sizes = Size::all();
+        $this->sizes = Size::all()->where('status', true);
 
         if (empty($this->variants)) {
             $this->addVariant();
@@ -29,6 +29,7 @@ class SizeVariantForm extends Component
         if (count($this->variants) < $this->sizes->count()) {
             $this->variants[] = ['size_id' => '1', 'stock' => 0];
         }
+        $this->dispatch('updateVariants', $this->variants);
     }
 
     // Remove a variant row
@@ -37,12 +38,13 @@ class SizeVariantForm extends Component
         if (count($this->variants) > 1) {
             unset($this->variants[$index]);
             $this->variants = array_values($this->variants);
+            $this->dispatch('updateVariants', $this->variants);
         }
     }
 
-    public function emitVariants()
+    public function updated()
     {
-        $this->dispatch('sizeVariants', $this->variants);
+        $this->dispatch('updateVariants', $this->variants);
     }
 
     public function render()

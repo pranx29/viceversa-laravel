@@ -9,35 +9,24 @@
                     <span>Add Product</span>
                 </a>
             </div>
-            <div>
-                <div class="sm:hidden">
-                    <label for="Tab" class="sr-only">Tab</label>
-
-                    <select id="Tab" class="w-full rounded-md border-gray-200">
-                        <option select>All</option>
-                        <option>Active</option>
-                        <option>Inactive</option>
-                    </select>
-                </div>
-
-                <div class="hidden sm:block">
+            <div class="flex justify-between items-center">
+                <div>
                     <nav class="flex gap-4" aria-label="Tabs">
-                        <a href="#" class="shrink-0 rounded-lg bg-button p-2 text-sm font-medium">
+                        <a href="{{route('admin.products.index')}}"
+                            class="{{ !request()->has('active') ? 'shrink-0 rounded-lg bg-button p-2 text-sm font-medium hover:bg-button hover:text-black' : 'shrink-0 rounded-lg p-2 text-sm font-medium text-foreground bg-primary hover:bg-button hover:text-black' }}">
                             All
                         </a>
 
-                        <a href="#12"
-                            class="shrink-0 rounded-lg p-2 text-sm font-medium text-foreground bg-primary hover:bg-button hover:text-black">
+                        <a href="{{route('admin.products.index', ['active' => true])}}"
+                            class="{{ request()->get('active') === '1' ? 'shrink-0 rounded-lg bg-button p-2 text-sm font-medium hover:bg-button hover:text-black' : 'shrink-0 rounded-lg p-2 text-sm font-medium text-foreground bg-primary hover:bg-button hover:text-black' }}">
                             Active
                         </a>
 
-                        <a href="#"
-                            class="shrink-0 rounded-lg p-2 text-sm font-medium text-foreground bg-primary hover:bg-button hover:text-black">
+                        <a href="{{route('admin.products.index', ['active' => false])}}"
+                            class="{{ request()->get('active') === '0' ? 'shrink-0 rounded-lg bg-button p-2 text-sm font-medium hover:bg-button hover:text-black' : 'shrink-0 rounded-lg p-2 text-sm font-medium text-foreground bg-primary hover:bg-button hover:text-black' }}">
                             Inactive
                         </a>
                     </nav>
-
-
                 </div>
             </div>
 
@@ -48,14 +37,17 @@
                         <tr class="border-b border-foreground bg-primary">
                             <th class="p-4 text-sm font-normal leading-none text-foreground">Product</th>
                             <th class="p-4 text-sm font-normal leading-none text-foreground">Status</th>
-                            <th class="p-4 text-sm font-normal leading-none text-foreground">Stock</th>
-                            <th class="p-4 text-sm font-normal leading-none text-foreground">Category</th>
+                            <th class="p-4 text-sm font-normal leading-none text-foreground hidden sm:table-cell">Stock
+                            </th>
+                            <th class="p-4 text-sm font-normal leading-none text-foreground hidden sm:table-cell">
+                                Category</th>
                             <th class="p-4 text-sm font-normal leading-none text-foreground">Price</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($products as $product)
-                            <tr onclick="window.location='{{ route('admin.products.show', $product) }}'" class="cursor-pointer hover:bg-primary">
+                            <tr onclick="window.location='{{ route('admin.products.show', $product->slug) }}'"
+                                class="cursor-pointer hover:bg-primary">
                                 <td
                                     class="p-4 border-b border-foreground text-primary-foreground py-3 flex items-center gap-6">
                                     <img src="{{ $product->primaryImage() }}" alt="{{ $product->name }}"
@@ -66,12 +58,14 @@
                                     <x-badge
                                         :active="$product->is_active">{{ $product->is_active ? 'Active' : 'Inactive' }}</x-badge>
                                 </td>
-                                <td class="p-4 border-b border-foreground text-primary-foreground py-3">
+                                <td
+                                    class="p-4 border-b border-foreground text-primary-foreground py-3 hidden sm:table-cell">
                                     <p class="text-sm ">{{ $product->totalStock()}} for
                                         {{ $product->sizes->count() }} variant(s)
                                     </p>
                                 </td>
-                                <td class="p-4 border-b border-foreground text-primary-foreground py-3">
+                                <td
+                                    class="p-4 border-b border-foreground text-primary-foreground py-3 hidden sm:table-cell">
                                     <p class="text-sm ">{{ $product->category->name }}</p>
                                 </td>
                                 <td class="p-4 border-b border-foreground text-primary-foreground py-3">
@@ -87,13 +81,10 @@
                         Showing {{ $products->firstItem() }} to {{ $products->lastItem() }} of {{ $products->total() }}
                     </div>
                     <div>
-                        {{ $products->links() }}
+                        {{ $products->links('pagination::custom') }}
                     </div>
                 </div>
             </div>
-
-
-
         </div>
     </div>
 </x-admin-layout>

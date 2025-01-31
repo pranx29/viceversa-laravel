@@ -49,7 +49,12 @@
                 <div
                     class="mt-10 flex flex-col items-center justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
                     <div class="flex items-end">
-                        <h1 class="text-3xl font-bold text-primary-foreground">LKR {{ number_format($product->price, 2) }}</h1>
+                        @if ($product->discount)
+                            <h1 class="text-3xl font-bold text-primary-foreground">LKR {{ number_format($product->price - $product->discount, 2) }}</h1>
+                            <span class="ml-2 text-lg text-foreground line-through">LKR {{ number_format($product->price, 2) }}</span>
+                        @else
+                            <h1 class="text-3xl font-bold text-primary-foreground">LKR {{ number_format($product->price, 2) }}</h1>
+                        @endif
                     </div>
 
                     <x-primary-button wire:click="addToCart" class="inline-flex items-center justify-center gap-2 px-6 py-2">

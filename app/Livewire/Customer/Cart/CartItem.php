@@ -9,6 +9,7 @@ class CartItem extends Component
 {
     public $productName;
     public $price;
+    public $discount;
     public $quantity;
     public $image;
     public $size;
@@ -21,6 +22,7 @@ class CartItem extends Component
 
         $this->productName = $product->name;
         $this->price = $product->price;
+        $this->discount = $product->discount;
         $this->quantity = $item['quantity'];
         $this->image = $product->primaryImage();
         $this->size = $product->sizes()->find($item['size_id'])->name;

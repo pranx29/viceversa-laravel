@@ -12,8 +12,10 @@ return new class extends Migration {
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('address_id')->constrained()->onDelete('cascade');
+            $table->string('guest_email')->nullable();
+            $table->string('shipping_cost');
             $table->enum('status', ['Processing', 'Completed', 'Cancelled'])->default('Processing');
             $table->timestamps();
         });

@@ -19,7 +19,7 @@
                     </button>
                     <button wire:click="deleteAddress({{ $address['id'] }})"
                         class="rounded-md text-foreground hover:text-foreground/80 transition-all duration-300 p-2 bg-primary">
-                        <x-iconsax-bro-trash class="size-5" />
+                        <x-iconsax-lin-trash class="size-5" />
                     </button>
                 </div>
             </div>
