@@ -32,9 +32,9 @@
                     <th class="p-4 text-sm font-normal leading-none text-foreground">Endpoint</th>
                     <th class="p-4 text-sm font-normal leading-none text-foreground">Method</th>
                     <th class="p-4 text-sm font-normal leading-none text-foreground">Status Code</th>
-                    <th class="p-4 text-sm font-normal leading-none text-foreground">Execution Time (ms)</th>
-                    <th class="p-4 text-sm font-normal leading-none text-foreground">IP Address</th>
-                    <th class="p-4 text-sm font-normal leading-none text-foreground">Timestamp</th>
+                    <th class="p-4 text-sm font-normal leading-none text-foreground hidden sm:table-cell">Execution Time (ms)</th>
+                    <th class="p-4 text-sm font-normal leading-none text-foreground hidden sm:table-cell">IP Address</th>
+                    <th class="p-4 text-sm font-normal leading-none text-foreground hidden sm:table-cell">Timestamp</th>
                 </tr>
             </thead>
             <tbody>
@@ -48,10 +48,10 @@
                             class="p-4 border-b border-foreground text-primary-foreground py-3 {{ $log->status_code >= 200 && $log->status_code < 300 ? 'text-green-500' : ($log->status_code >= 400 ? 'text-yellow-500' : 'text-red-500') }}">
                             {{ $log->status_code }}
                         </td>
-                        <td class="p-4 border-b border-foreground text-primary-foreground py-3">{{ $log->execution_time }}
+                        <td class="p-4 border-b border-foreground text-primary-foreground py-3 hidden sm:table-cell">{{ $log->execution_time }}
                         </td>
-                        <td class="p-4 border-b border-foreground text-primary-foreground py-3">{{ $log->ip_address }}</td>
-                        <td class="p-4 border-b border-foreground text-primary-foreground py-3">{{ $log->created_at }}</td>
+                        <td class="p-4 border-b border-foreground text-primary-foreground py-3 hidden sm:table-cell">{{ $log->ip_address }}</td>
+                        <td class="p-4 border-b border-foreground text-primary-foreground py-3 hidden sm:table-cell">{{ $log->created_at }}</td>
                     </tr>
                 @endforeach
             </tbody>

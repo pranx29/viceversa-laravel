@@ -113,7 +113,8 @@
                 </div>
             </div>
         </div>
-
-        <p class="text-xs text-primary-foreground">&copy; 2024. Viceversa. All rights reserved.</p>
+        <div class="mt-8 text-center">
+            <p class="text-xs text-primary-foreground">&copy; 2024. Viceversa. All rights reserved.</p>
+        </div>
     </div>
 </footer>

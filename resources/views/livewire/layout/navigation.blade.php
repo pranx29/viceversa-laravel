@@ -76,8 +76,8 @@ new class extends Component {
                         class="mt-2 rounded-lg bg-primary py-2 w-full absolute left-0 z-10 shadow-lg lg:hidden">
                         <nav class="flex flex-col gap-3 p-4">
                             <x-nav-link href="{{ route('home') }}">{{ __('Home') }}</x-nav-link>
-                            <x-nav-link>{{ __('Shop') }}</x-nav-link>
-                            <x-nav-link>{{ __('Collections') }}</x-nav-link>
+                            <x-nav-link href="{{ route('products.index')}}">{{ __('Shop') }}</x-nav-link>
+                            <!-- <x-nav-link>{{ __('Collections') }}</x-nav-link> -->
                             <!-- <x-nav-link>{{ __('Contact') }}</x-nav-link> -->
                         </nav>
                     </div>

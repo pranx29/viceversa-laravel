@@ -26,7 +26,7 @@ class ProductSeeder extends Seeder
                     This flannel button-up shirt is made from 100% cotton and features a classic plaid pattern.
                     It has a regular fit, long sleeves, and a button-up front. It is perfect for casual wear.',
                 'price' => 3600.00,
-                'discount' => 0.00,
+                'discount' => 1000.00,
                 'is_active' => true,
                 'category_id' => 4,
                 'sizes' => [
@@ -74,7 +74,7 @@ class ProductSeeder extends Seeder
                     This graphic t-shirt is made from 100% cotton and features a unique graphic print.
                     It has a regular fit, short sleeves, and a crew neck. It is perfect for casual wear.',
                 'price' => 4000.00,
-                'discount' => 0.00,
+                'discount' => 500.00,
                 'is_active' => true,
                 'category_id' => 1,
                 'sizes' => [
@@ -118,7 +118,7 @@ class ProductSeeder extends Seeder
                     This knit blazer is made from a blend of cotton and polyester, providing both comfort and style. It features a slim fit, long sleeves, and a single-breasted front with button closure.
                     ',
                 'price' => 6000.00,
-                'discount' => 0.00,
+                'discount' => 700.00,
                 'is_active' => true,
                 'category_id' => 2,
                 'sizes' => [
@@ -184,7 +184,7 @@ class ProductSeeder extends Seeder
                     These ripstop shorts are made from a blend of cotton and spandex, providing both comfort and style. They feature a relaxed fit, knee length, and a zip fly with button closure.
                     ',
                 'price' => 3400.00,
-                'discount' => 0.00,
+                'discount' => 200.00,
                 'is_active' => true,
                 'category_id' => 5,
                 'sizes' => [

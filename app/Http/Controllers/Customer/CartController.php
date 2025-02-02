@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Models\Cart;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -34,6 +35,13 @@ class CartController extends Controller
     public function checkout()
     {
         return view('customer.cart.checkout', [
+        ]);
+    }
+
+    public function orderSuccess(Order $order)
+    {
+        return view('customer.cart.order-success', [
+            'order' => $order,
         ]);
     }
 }

@@ -24,6 +24,8 @@ Route::get('cart', function() {
 
 Route::get('checkout', [CartController::class, 'checkout'])->name('cart.checkout');
 
+Route::get('/order-success/{order}', [CartController::class, 'orderSuccess'])->name('order.success');
+
 
 Route::prefix('admin')
     ->namespace('App\Http\Controllers\Admin')

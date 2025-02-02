@@ -9,7 +9,10 @@ class PaymentService
 {
     public function __construct()
     {
+
         Stripe::setApiKey(env('STRIPE_SECRET'));
+
+
     }
 
     // Create a PaymentIntent

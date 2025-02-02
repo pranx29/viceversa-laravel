@@ -38,7 +38,7 @@
                             <th class="p-4 text-sm font-normal leading-none text-foreground">Order ID</th>
                             <th class="p-4 text-sm font-normal leading-none text-foreground">Customer Name</th>
                             <th class="p-4 text-sm font-normal leading-none text-foreground">Order Date</th>
-                            <th class="p-4 text-sm font-normal leading-none text-foreground">Total</th>
+                            <th class="p-4 text-sm font-normal leading-none text-foreground hidden sm:table-cell">Total</th>
                             <th class="p-4 text-sm font-normal leading-none text-foreground">Status</th>
                         </tr>
                     </thead>
@@ -62,7 +62,7 @@
                                 <td class="p-4 border-b border-foreground text-primary-foreground py-3">
                                     {{ $order->created_at->format('Y-m-d') }}
                                 </td>
-                                <td class="p-4 border-b border-foreground text-primary-foreground py-3">
+                                <td class="p-4 border-b border-foreground text-primary-foreground py-3 hidden sm:table-cell">
                                     {{ number_format($order->total(), 2) }}
                                 </td>
                                 <td class="p-4 border-b border-foreground text-primary-foreground py-3">

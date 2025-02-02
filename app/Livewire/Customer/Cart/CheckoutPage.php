@@ -128,9 +128,7 @@ class CheckoutPage extends Component
             }
         }
 
-        redirect()->route('profile', [
-            'order' => $order->id,
-        ]);
+        return redirect()->route('order.success', ['order' => $order]);
     }
 
     public function guestUserCheckout()
@@ -201,7 +199,7 @@ class CheckoutPage extends Component
             }
         }
 
-        dd('Order placed successfully');
+        return redirect()->route('order.success', ['order' => $order]);
     }
 
     public function placeOrder()

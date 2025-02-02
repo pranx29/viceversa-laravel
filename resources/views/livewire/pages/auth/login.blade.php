@@ -31,10 +31,10 @@ new #[Layout('layouts.app')] class extends Component
 ?>
 
 <section class="flex items-center justify-center container mx-auto px-4 py-8">
-    <x-auth-session-status class="mb-4" :status="session('status')" />
     <!-- Left Section - Login Form -->
     <div class="w-full grid md:grid-cols-2 overflow-hidden gap-8">
         <form wire:submit="login" class="p-8 space-y-6 bg-primary rounded-lg">
+            <x-auth-session-status class="mb-4" :status="session('status')" />
             <div>
                 <h2 class="text-4xl font-bold text-primary-foreground">
                     Login
@@ -46,7 +46,7 @@ new #[Layout('layouts.app')] class extends Component
                 <div class="relative">
                     <x-input-label for="email" :value="__('Email')" />
                     <x-text-input wire:model="form.email" id="email" class="block mt-1 w-full" type="email" name="email"
-                        required autofocus autocomplete="username" />
+                        required autofocus autocomplete="email" />
                     <x-input-error :messages="$errors->get('form.email')" class="mt-2" />
                 </div>
             </div>
@@ -58,7 +58,7 @@ new #[Layout('layouts.app')] class extends Component
                     <x-input-label for="password" :value="__('Password')" />
 
                     <x-text-input wire:model="form.password" id="password" class="block mt-1 w-full" type="password"
-                        name="password" required autocomplete="current-password" />
+                        name="password" required autocomplete="password" />
 
                     <x-input-error :messages="$errors->get('form.password')" class="mt-2" />
                 </div>
@@ -83,7 +83,6 @@ new #[Layout('layouts.app')] class extends Component
                     @endif
                 </div>
             </div>
-
 
             <div class="space-y-4">
                 <x-primary-button class="w-full">
