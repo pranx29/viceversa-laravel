@@ -30,7 +30,7 @@
                     <th class="p-4 text-sm font-normal leading-none text-primary-foreground">Size</th>
                     <th class="p-4 text-sm font-normal leading-none text-primary-foreground">Quantity</th>
                     <th class="p-4 text-sm font-normal leading-none text-primary-foreground">Price</th>
-                    <th class="p-4 text-sm font-normal leading-none text-primary-foreground">Total</th>
+                    <th class="p-4 text-sm font-normal leading-none text-primary-foreground hidden sm:table-cell">Total</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,7 +42,7 @@
                         <td class="p-4 border-b border-foreground text-foreground py-3">LKR
                             {{ number_format($item->price, 2) }}
                         </td>
-                        <td class="p-4 border-b border-foreground text-foreground py-3">LKR
+                        <td class="p-4 border-b border-foreground text-foreground py-3 hidden sm:table-cell">LKR
                             {{ number_format($item->quantity * $item->price, 2) }}
                         </td>
                     </tr>

@@ -3,7 +3,6 @@ import forms from "@tailwindcss/forms";
 
 /** @type {import('tailwindcss').Config} */
 export default {
-    darkMode: false, 
     content: [
         "./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
         "./storage/framework/views/*.php",
@@ -20,11 +19,10 @@ export default {
                 button: "#FFFFFF",
                 background: "#101112",
                 foreground: "#D4D4D4",
-                primary:{
+                primary: {
                     DEFAULT: "#1A1B1E",
                     foreground: "#FFFFFF",
                 },
-                
             },
         },
     },
